@@ -1,0 +1,38 @@
+{
+    "google": {
+        "project_id": "your-project-id",
+        "location": ""
+    },
+    "vertex": {
+        "project_id": "your-project-id", 
+        "location": ""
+    },
+    "api_keys": {
+        "anthropic": "your-anthropic-api-key",
+        "openai": "your-openai-api-key",
+        "xai_api_key": "your-xai-api-key",
+        "glm_api_key": "your-glm-api-key",
+        "deepseek_api_key": "your-deepseek-api-key",
+        "bailian_api_key": "your-bailian-api-key"
+    },
+    "bailian_settings": {
+        "default_temperature": 0.3,
+        "default_top_p": 0.7,
+        "request_timeout": 30,
+        "retry_attempts": 3,
+        "batch_size": 5,
+        "batch_delay": 5
+    },
+    "qwen_settings": {
+        "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "default_temperature": 0.3,
+        "default_top_p": 0.7,
+        "request_timeout": 30,
+        "retry_attempts": 3,
+        "batch_size": 5,
+        "batch_delay": 5
+    },
+    "glm_api_url": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+    "deepseek_api_url": "https://api.deepseek.com/v1/chat/completions",
+    "use_vertex_api": false
+}
