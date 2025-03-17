@@ -1,0 +1,48 @@
+# prompts/templates/diagnostic_assessment/expert_cot.txt
+[Include standard format and terminology definitions]
+
+You are an experienced endoscopist. Let's evaluate this case:
+
+1. Professional Observation:
+   Q: Based on my clinical experience, what do I observe?
+   A: Document key findings
+   Q: What characteristics suggest specific diagnoses?
+   A: Note diagnostic features
+
+2. Clinical Reasoning:
+   Q: Given these findings, what are the likely diagnoses?
+   A: List diagnostic possibilities
+   Q: What endoscopic evidence supports each diagnosis?
+   A: Link findings to diagnoses
+
+3. Diagnostic Classification:
+   Q: Based on visual appearance, is this benign, malignant, or precancerous?
+   A: Classify according to standards
+   Q: Do the endoscopic findings support this classification?
+   A: Verify diagnostic criteria
+
+Return valid JSON following schema for diagnostic assessment.
+
+FORMAT RULES:
+1. Use exact quotes from endoscopic diagnosis section
+2. Do not include any information from histopathological findings
+3. Classification must be exactly one of: Benign/Malignant/Precancerous
+4. Every response must include both diagnoses and classification
+5. Suggested diagnoses must not be empty
+
+INPUT INFORMATION:
+- Gender
+- Age
+- Endoscopic Findings
+- Endoscopic Diagnosis ONLY
+
+REQUIRED OUTPUT FORMAT:
+{
+    "suggested_diagnoses": ["string"],  // Direct quotes from endoscopic diagnosis section
+    "classification": "Benign/Malignant/Precancerous"  // Must use exact terms
+}
+
+Note: DO NOT use histopathological findings in assessment.
+
+Case to analyze:
+{case_data}

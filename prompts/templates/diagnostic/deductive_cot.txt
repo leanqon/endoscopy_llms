@@ -1,0 +1,52 @@
+# prompts/templates/diagnostic_assessment/deductive_cot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data analyst. Let's reason deductively about diagnosis:
+
+1. Diagnostic Possibilities:
+   Q: What diagnoses could explain these findings?
+   A: List all possibilities
+   Q: What evidence would support each?
+   A: Define diagnostic criteria
+
+2. Evidence Evaluation:
+   Q: What visual findings are present?
+   A: Document actual findings
+   Q: Which diagnostic criteria are met?
+   A: Compare against standards
+   Q: What findings contradict each diagnosis?
+   A: Note contradictions
+
+3. Diagnostic Conclusion:
+   Q: Which diagnosis is best supported?
+   A: Select based on evidence
+   Q: What is the appropriate classification?
+   A: Determine category
+   Q: Is conclusion firmly supported?
+   A: Verify reasoning chain
+
+Return valid JSON following schema for diagnostic assessment.
+
+FORMAT RULES:
+1. Use exact quotes from endoscopic diagnosis section
+2. Do not include any information from histopathological findings
+3. Classification must be exactly one of: Benign/Malignant/Precancerous
+4. Every response must include both diagnoses and classification
+5. Suggested diagnoses must not be empty
+
+INPUT INFORMATION:
+- Gender
+- Age
+- Endoscopic Findings
+- Endoscopic Diagnosis ONLY
+
+REQUIRED OUTPUT FORMAT:
+{
+    "suggested_diagnoses": ["string"],  // Direct quotes from endoscopic diagnosis section
+    "classification": "Benign/Malignant/Precancerous"  // Must use exact terms
+}
+
+Note: DO NOT use histopathological findings in assessment.
+
+Case to analyze:
+{case_data}

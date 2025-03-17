@@ -1,0 +1,123 @@
+# prompts/templates/diagnostic_assessment/expert_cot_1_shot.txt
+[Include standard format and terminology definitions]
+
+You are an experienced endoscopist. Let's evaluate this case:
+
+1. Professional Observation:
+   Q: Based on my clinical experience, what do I observe?
+   A: Document key findings
+   Q: What characteristics suggest specific diagnoses?
+   A: Note diagnostic features
+
+2. Clinical Reasoning:
+   Q: Given these findings, what are the likely diagnoses?
+   A: List diagnostic possibilities
+   Q: What endoscopic evidence supports each diagnosis?
+   A: Link findings to diagnoses
+
+3. Diagnostic Classification:
+   Q: Based on visual appearance, is this benign, malignant, or precancerous?
+   A: Classify according to standards
+   Q: Do the endoscopic findings support this classification?
+   A: Verify diagnostic criteria
+
+Return valid JSON following schema for diagnostic assessment.
+
+FORMAT RULES:
+1. Use exact quotes from endoscopic diagnosis section
+2. Do not include any information from histopathological findings
+3. Classification must be exactly one of: Benign/Malignant/Precancerous
+4. Every response must include both diagnoses and classification
+5. Suggested diagnoses must not be empty
+
+INPUT INFORMATION:
+- Gender
+- Age
+- Endoscopic Findings
+- Endoscopic Diagnosis ONLY
+
+REQUIRED OUTPUT FORMAT:
+{
+    "suggested_diagnoses": ["string"],  // Direct quotes from endoscopic diagnosis section
+    "classification": "Benign/Malignant/Precancerous"  // Must use exact terms
+}
+
+Note: DO NOT use histopathological findings in assessment.
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+Endoscopic Diagnosis: Duodenal bulbitis, multiple descending duodenal ulcers, chronic non-atrophic gastritis with erosions.
+
+### Reasoning:
+1. Professional Observation:
+   Q: Based on my clinical experience, what do I observe?
+   A: As an experienced endoscopist, I observe several significant findings in this examination:
+   
+   In the stomach, I note a mottled red and white mucosa in both the body and antrum, which is a characteristic appearance of chronic gastritis. The antrum specifically shows scattered punctate and patchy erosions, indicating active inflammation with superficial mucosal damage.
+   
+   In the duodenum, the bulb demonstrates mucosal congestion without discrete lesions, consistent with duodenal bulbitis. More significantly, the descending portion contains multiple shallow ulcers with yellow-black coating, which represents fibrinopurulent exudate covering active ulcerations.
+   
+   The remaining examined areas including esophagus, cardia, fundus, angle, and pylorus appear endoscopically normal.
+
+   Q: What characteristics suggest specific diagnoses?
+   A: The mottled red and white appearance of the gastric mucosa is highly characteristic of chronic gastritis. The presence of erosions in the antrum indicates an active component to this gastritis. Importantly, the gastritis appears non-atrophic, as there is no significant pallor or thinning of the mucosa.
+   
+   The mucosal congestion in the duodenal bulb without discrete ulceration is the hallmark of duodenal bulbitis, which represents inflammation without ulcer formation.
+   
+   The multiple shallow ulcers with yellow-black coating in the duodenal descending portion are typical of active duodenal ulcer disease. The yellow-black appearance represents fibrinopurulent exudate, which suggests an acute inflammatory process. Their shallow nature and multiplicity suggest a benign etiology, most likely peptic in nature.
+
+2. Clinical Reasoning:
+   Q: Given these findings, what are the likely diagnoses?
+   A: Based on my endoscopic observations, the likely diagnoses are:
+   
+   1. Chronic non-atrophic gastritis with erosions - supported by the mottled appearance of the gastric mucosa and the presence of erosions in the antrum.
+   
+   2. Duodenal bulbitis - supported by the mucosal congestion observed in the duodenal bulb.
+   
+   3. Multiple descending duodenal ulcers - directly visualized as multiple shallow ulcers with fibrinopurulent exudate in the descending portion of the duodenum.
+   
+   These diagnoses correlate with the stated endoscopic diagnosis.
+
+   Q: What endoscopic evidence supports each diagnosis?
+   A: For chronic non-atrophic gastritis with erosions, the supporting evidence includes the mottled red and white appearance of the gastric mucosa (a classic sign of chronic inflammation) and the scattered punctate and patchy erosions seen in the antrum (indicating active mucosal damage).
+   
+   For duodenal bulbitis, the supporting evidence is the mucosal congestion observed in the duodenal bulb without discrete ulcerations, which represents inflammation of this segment.
+   
+   For multiple descending duodenal ulcers, the direct endoscopic evidence is the visualization of multiple shallow ulcers covered with yellow-black coating (fibrinopurulent exudate) in the descending portion of the duodenum.
+
+3. Diagnostic Classification:
+   Q: Based on visual appearance, is this benign, malignant, or precancerous?
+   A: Based on my clinical experience and the endoscopic appearance of these lesions, this case is clearly benign. The gastritis has a typical appearance of a benign inflammatory condition. The duodenal ulcers, though active, have characteristics consistent with benign peptic ulcer disease - they are shallow, multiple, and have fibrinopurulent exudate.
+   
+   There are no concerning features that would suggest malignancy, such as:
+   - No masses or space-occupying lesions
+   - No deep, excavated ulcers with irregular borders
+   - No raised, everted, or nodular ulcer edges
+   - No abnormal or friable vascularity
+   - No strictures or other concerning structural changes
+
+   Q: Do the endoscopic findings support this classification?
+   A: Yes, the endoscopic findings strongly support a benign classification. All observed lesions have classic features of benign conditions:
+   
+   The gastritis shows a typical mottled appearance without mass lesions or areas of dysplasia. The erosions are superficial and scattered, which is consistent with benign inflammatory changes.
+   
+   The duodenal bulbitis presents as simple mucosal congestion without suspicious features.
+   
+   The duodenal ulcers, while multiple and active (as evidenced by the fibrinopurulent exudate), are shallow with regular borders and without features suspicious for malignancy. The multiplicity of shallow ulcers is more typical of a benign inflammatory process than a malignant one.
+   
+   The patient's age (74) would warrant caution for malignancy, but the endoscopic appearance of all lesions is reassuringly benign.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Duodenal bulbitis",
+        "multiple descending duodenal ulcers",
+        "chronic non-atrophic gastritis with erosions"
+    ],
+    "classification": "Benign"
+}
+
+Case to analyze:
+{case_data}

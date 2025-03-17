@@ -1,0 +1,848 @@
+# prompts/templates/diagnostic_assessment/clinical_protocol_5_shot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data analyst. Let's follow clinical protocol:
+
+1. Standard Diagnostic Evaluation:
+   Q: Following protocol, what diagnostic criteria apply?
+   A: Review standard criteria
+   Q: What classifications are recognized?
+   A: List approved categories
+   Q: What evidence must be documented?
+   A: Note requirements
+
+2. Protocol-Based Classification:
+   Q: Do findings meet diagnostic criteria?
+   A: Compare to standards
+   Q: What classification is indicated?
+   A: Apply standard categories
+   Q: Is supporting evidence documented?
+   A: Verify documentation
+
+3. Compliant Documentation:
+   Q: Is diagnosis properly formatted?
+   A: Check standard format
+   Q: Are all required elements included?
+   A: Review completeness
+   Q: Does assessment meet guidelines?
+   A: Confirm compliance
+
+Return valid JSON following schema for diagnostic assessment.
+
+FORMAT RULES:
+1. Use exact quotes from endoscopic diagnosis section
+2. Do not include any information from histopathological findings
+3. Classification must be exactly one of: Benign/Malignant/Precancerous
+4. Every response must include both diagnoses and classification
+5. Suggested diagnoses must not be empty
+
+INPUT INFORMATION:
+- Gender
+- Age
+- Endoscopic Findings
+- Endoscopic Diagnosis ONLY
+
+REQUIRED OUTPUT FORMAT:
+{
+    "suggested_diagnoses": ["string"],  // Direct quotes from endoscopic diagnosis section
+    "classification": "Benign/Malignant/Precancerous"  // Must use exact terms
+}
+
+Note: DO NOT use histopathological findings in assessment.
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+Endoscopic Diagnosis: Duodenal bulbitis, multiple descending duodenal ulcers, chronic non-atrophic gastritis with erosions.
+
+### Reasoning:
+1. Standard Diagnostic Evaluation:
+   Q: Following protocol, what diagnostic criteria apply?
+   A: According to standard endoscopic diagnostic criteria for upper GI examination, the following apply:
+   
+   For gastritis, diagnostic criteria include:
+   Mucosal erythema, often with mottled red and white appearance
+   Presence of superficial erosions
+   Absence of significant mucosal atrophy (for non-atrophic classification)
+   
+   For duodenal bulbitis, diagnostic criteria include:
+   Mucosal congestion and edema in the duodenal bulb
+   Absence of frank ulceration in the bulb itself
+   
+   For duodenal ulcers, diagnostic criteria include:
+   Discrete mucosal breaks reaching the submucosa
+   Often covered with fibrinopurulent exudate (yellow-black coating)
+   May be single or multiple
+
+   Q: What classifications are recognized?
+   A: Standard endoscopic classifications for these findings include:
+   
+   For gastritis:
+   Erythematous/exudative (non-atrophic)
+   Erosive
+   Atrophic
+   Hemorrhagic
+   
+   For duodenal ulcers:
+   Active (A1-A2)
+   Healing (H1-H2)
+   Scarred (S1-S2)
+   
+   For benign vs. malignant classification:
+   Benign: Regular borders, flat or slightly raised edges, clear base
+   Malignant: Irregular borders, raised/nodular edges, excavated appearance
+   Precancerous: Intestinal metaplasia, dysplasia, or suspicious mucosal patterns
+
+   Q: What evidence must be documented?
+   A: According to documentation protocols, the following evidence must be documented:
+   
+   For gastritis:
+   Distribution (antrum, body, diffuse)
+   Appearance (mottled, erythematous, etc.)
+   Presence and extent of erosions
+   
+   For duodenal bulbitis:
+   Mucosal changes without ulceration
+   
+   For duodenal ulcers:
+   Location
+   Number (single vs. multiple)
+   Size (if measured)
+   Appearance (including exudate)
+   
+   For classification purposes:
+   Features suggesting benign vs. malignant nature
+   Presence of high-risk features
+
+2. Protocol-Based Classification:
+   Q: Do findings meet diagnostic criteria?
+   A: Yes, the findings meet standard diagnostic criteria:
+   
+   For chronic non-atrophic gastritis with erosions:
+   Mottled red and white mucosa in the gastric body and antrum
+   Scattered punctate and patchy erosions in the antrum
+   No mention of atrophic changes
+   
+   For duodenal bulbitis:
+   Mucosal congestion in the duodenal bulb
+   No ulceration described in the bulb
+   
+   For multiple descending duodenal ulcers:
+   Multiple shallow ulcers in the descending portion
+   Yellow-black coating (fibrinopurulent exudate), indicating active lesions
+
+   Q: What classification is indicated?
+   A: Based on standard protocol, the findings indicate:
+   
+   1. Chronic non-atrophic gastritis with erosions
+   2. Duodenal bulbitis
+   3. Multiple descending duodenal ulcers
+   
+   All of these represent benign inflammatory conditions. The duodenal ulcers, while active as evidenced by the yellow-black coating, have features consistent with benign peptic ulcer disease (multiple, shallow, with exudate). There are no features suggesting malignancy, such as irregular borders, deep excavation, or raised nodular edges. Therefore, the appropriate classification is "Benign".
+
+   Q: Is supporting evidence documented?
+   A: Yes, adequate supporting evidence is documented:
+   
+   For chronic non-atrophic gastritis with erosions:
+   The mottled appearance of the gastric mucosa is documented
+   The scattered erosions in the antrum are specifically noted
+   
+   For duodenal bulbitis:
+   The mucosal congestion in the duodenal bulb is documented
+   
+   For multiple descending duodenal ulcers:
+   The location in the descending duodenum is specified
+   The multiplicity of the ulcers is noted
+   The presence of yellow-black coating (exudate) is documented
+   
+   For benign classification:
+   The shallow nature of the ulcers and typical exudate is documented
+   No concerning features for malignancy are described
+
+3. Compliant Documentation:
+   Q: Is diagnosis properly formatted?
+   A: Yes, the endoscopic diagnosis is properly formatted according to standard documentation guidelines:
+   Each distinct pathological entity is listed separately
+   Anatomical locations are specified
+   Descriptive terminology is used appropriately
+
+   Q: Are all required elements included?
+   A: Yes, all required elements for documentation are included:
+   Findings for all examined anatomical regions are documented
+   Pathological findings are described with appropriate detail
+   The endoscopic diagnosis summarizes the key findings
+   
+   The documentation provides sufficient information to support the diagnoses and classification.
+
+   Q: Does assessment meet guidelines?
+   A: Yes, the assessment meets standard endoscopic reporting guidelines:
+   The description of findings is specific and detailed
+   The diagnoses are consistent with the documented findings
+   The classification as benign is supported by the endoscopic features
+   
+   The reporting is compliant with standard medical documentation requirements.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Duodenal bulbitis",
+        "multiple descending duodenal ulcers",
+        "chronic non-atrophic gastritis with erosions"
+    ],
+    "classification": "Benign"
+}
+
+## Example 2:
+Gender: Male
+Age: 73
+Endoscopic Findings: Ileocecal valve: normal. Terminal ileum: normal. Ascending colon: 0.8cm sub-pedunculated polyp, EMR performed, defect clipped. Transverse colon: two 0.6-0.7cm sub-pedunculated polyps, EMR performed, defects clipped. Descending colon: 1.5×1.0cm irregular mass at 36cm, friable, thrombin spray applied. Sigmoid: multiple 0.3-0.5cm polyps removed by forceps. Rectum: normal with internal hemorrhoids. Insertion time: 7min, withdrawal time: 15min. Boston Bowel Prep Score: 5.
+Endoscopic Diagnosis: Descending colon mass - nature undetermined, hemostasis performed; multiple colonic polyps (EMR and forceps removal), internal hemorrhoids, poor bowel prep, recommend early repeat examination.
+
+### Reasoning:
+1. Standard Diagnostic Evaluation:
+   Q: Following protocol, what diagnostic criteria apply?
+   A: According to standard colonoscopy diagnostic criteria, the following apply:
+   
+   For colonic polyps, diagnostic criteria include:
+   Size (small <1cm, large ≥1cm)
+   Morphology (pedunculated, sessile, flat)
+   Surface features (smooth, irregular)
+   Number (single, multiple)
+   
+   For colonic masses, diagnostic criteria include:
+   Size (usually ≥1cm)
+   Morphology (irregular, ulcerated, friable)
+   Surface features (irregular, bleeding tendency)
+   Border definition (well-defined vs. poorly defined)
+   
+   For internal hemorrhoids, diagnostic criteria include:
+   Presence of vascular cushions in the rectum
+   Grading is based on prolapse and bleeding (not specified in this report)
+
+   Q: What classifications are recognized?
+   A: Standard colonoscopy classifications for these findings include:
+   
+   For polyps:
+   Neoplastic (adenomatous) vs. non-neoplastic (hyperplastic)
+   Paris classification for morphology (not detailed in this report)
+   NICE classification for surface patterns (not detailed in this report)
+   
+   For colonic masses:
+   Benign: regular borders, non-friable, no ulceration
+   Malignant: irregular borders, friable, ulcerated, firm on probing
+   Undetermined: when features are inconclusive pending histopathology
+   
+   For overall classification:
+   Benign: all lesions appear benign
+   Malignant: any lesion has features strongly suggestive of malignancy
+   Precancerous: lesions with high risk for malignant transformation
+
+   Q: What evidence must be documented?
+   A: According to documentation protocols, the following evidence must be documented:
+   
+   For polyps:
+   Location
+   Size
+   Morphology
+   Intervention performed
+   
+   For masses:
+   Location
+   Size
+   Morphology and surface features
+   Friability or bleeding
+   Intervention performed
+   
+   For classification purposes:
+   Features suggesting benign vs. malignant nature
+   Presence of high-risk features
+   Technical details (bowel prep quality, examination completeness)
+
+2. Protocol-Based Classification:
+   Q: Do findings meet diagnostic criteria?
+   A: Yes, the findings meet standard diagnostic criteria:
+   
+   For multiple colonic polyps:
+   Clear documentation of location: ascending colon, transverse colon, sigmoid
+   Size documentation: 0.8cm, 0.6-0.7cm, 0.3-0.5cm
+   Morphology: sub-pedunculated
+   Intervention: EMR for larger polyps, forceps removal for smaller ones
+   
+   For descending colon mass:
+   Location clearly specified: descending colon at 36cm
+   Size documented: 1.5×1.0cm
+   Morphology: described as irregular
+   Surface features: friable (bleeds easily)
+   Intervention: thrombin spray applied for hemostasis
+   
+   For internal hemorrhoids:
+   Presence documented in the rectum (grading not specified)
+
+   Q: What classification is indicated?
+   A: Based on standard protocol, the findings indicate:
+   
+   1. Descending colon mass - nature undetermined (pending histopathology)
+   2. Multiple colonic polyps in ascending colon, transverse colon, and sigmoid
+   3. Internal hemorrhoids
+   
+   The descending colon mass has features concerning for malignancy: it is irregular and friable, requiring hemostatic intervention. Although the endoscopic diagnosis states "nature undetermined," the clinical diagnosis includes "colonic malignant tumor," which suggests clinical suspicion for malignancy. According to standard protocol, when any lesion has features strongly suggestive of malignancy, the overall classification should be "Malignant" pending histopathological confirmation. Therefore, the appropriate classification is "Malignant".
+
+   Q: Is supporting evidence documented?
+   A: Yes, adequate supporting evidence is documented:
+   
+   For descending colon mass:
+   Size: 1.5×1.0cm
+   Location: descending colon at 36cm
+   Morphology: described as irregular
+   Surface features: friable (bleeds easily)
+   Intervention: thrombin spray required for hemostasis
+   
+   For multiple colonic polyps:
+   Locations, sizes, and interventions are all documented
+   
+   For malignant classification:
+   The irregular and friable nature of the descending colon mass
+   Clinical diagnosis of "colonic malignant tumor"
+   
+   The documentation provides sufficient evidence to support both the diagnoses and the malignant classification.
+
+3. Compliant Documentation:
+   Q: Is diagnosis properly formatted?
+   A: Yes, the endoscopic diagnosis is properly formatted according to standard documentation guidelines:
+   Each distinct pathological entity is listed separately
+   Anatomical locations are specified
+   Interventions performed are documented
+   Uncertainty ("nature undetermined") is appropriately acknowledged
+
+   Q: Are all required elements included?
+   A: Yes, all required elements for documentation are included:
+   Findings for all examined anatomical regions are documented
+   Pathological findings are described with appropriate detail
+   Technical quality metrics are included (insertion time, withdrawal time, Boston Bowel Prep Score)
+   Recommendations for follow-up are provided
+   
+   The documentation provides sufficient information to support the diagnoses and classification.
+
+   Q: Does assessment meet guidelines?
+   A: Yes, the assessment meets standard colonoscopy reporting guidelines:
+   All examined segments are documented
+   Lesions are described with size, location, and morphology
+   Interventions are documented
+   Quality metrics (bowel prep score, examination times) are included
+   Recommendations for follow-up are provided
+   
+   The reporting is compliant with standard medical documentation requirements.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Descending colon mass",
+        "multiple colonic polyps",
+        "colonic malignant tumor"
+    ],
+    "classification": "Malignant"
+}
+
+## Example 3:
+Gender: Male
+Age: 34
+Endoscopic Findings: Esophagus: two varices beyond 30cm with red signs, sclerotherapy performed (6ml polidocanol). Stomach: mosaic pattern, antral erosions, 0.3cm ulcer. Duodenum: 0.5cm hyperplastic polyp in descending part.
+Endoscopic Diagnosis: Esophageal varices - sclerotherapy performed, portal hypertensive gastropathy, gastric ulcer, duodenal polyp.
+
+### Reasoning:
+1. Standard Diagnostic Evaluation:
+   Q: Following protocol, what diagnostic criteria apply?
+   A: According to standard endoscopic diagnostic criteria for upper GI examination, the following apply:
+   
+   For esophageal varices, diagnostic criteria include:
+   Dilated, tortuous veins in the esophagus
+   Location (distal, mid, proximal)
+   Red signs (red wale marks, cherry red spots) indicating high risk for bleeding
+   Size/grade (not specified in this report)
+   
+   For portal hypertensive gastropathy, diagnostic criteria include:
+   Mosaic pattern of gastric mucosa (pathognomonic)
+   Severity grading (mild vs. severe, not specified in this report)
+   
+   For gastric ulcer, diagnostic criteria include:
+   Location
+   Size
+   Appearance (regular vs. irregular, deep vs. shallow)
+   
+   For duodenal polyp, diagnostic criteria include:
+   Location
+   Size
+   Morphology (sessile, pedunculated)
+   Surface features
+
+   Q: What classifications are recognized?
+   A: Standard endoscopic classifications for these findings include:
+   
+   For esophageal varices:
+   Grading system: F1-F3 based on size (not specified in this report)
+   Risk assessment: presence of red signs indicates high risk
+   
+   For portal hypertensive gastropathy:
+   Mild vs. severe classification (not specified in this report)
+   
+   For gastric ulcer:
+   Forrest classification for bleeding risk (not applicable here)
+   Sakita classification for healing stage (not specified in this report)
+   Benign vs. malignant features
+   
+   For duodenal polyp:
+   Histological type (hyperplastic is specified, which is benign)
+   
+   For overall classification:
+   Benign: all lesions appear benign
+   Malignant: any lesion has features strongly suggestive of malignancy
+   Precancerous: lesions with high risk for malignant transformation
+
+   Q: What evidence must be documented?
+   A: According to documentation protocols, the following evidence must be documented:
+   
+   For esophageal varices:
+   Location
+   Presence of red signs
+   Intervention performed
+   
+   For portal hypertensive gastropathy:
+   Characteristic mosaic pattern
+   
+   For gastric ulcer:
+   Location
+   Size
+   Appearance
+   
+   For duodenal polyp:
+   Location
+   Size
+   Type (if determined endoscopically)
+   
+   For classification purposes:
+   Features suggesting benign vs. malignant nature
+   Presence of high-risk features
+
+2. Protocol-Based Classification:
+   Q: Do findings meet diagnostic criteria?
+   A: Yes, the findings meet standard diagnostic criteria:
+   
+   For esophageal varices:
+   Location: beyond 30cm (mid-esophagus)
+   Number: two varices
+   Risk features: red signs present
+   Intervention: sclerotherapy performed
+   
+   For portal hypertensive gastropathy:
+   Characteristic mosaic pattern of gastric mucosa documented
+   
+   For gastric ulcer:
+   Size: 0.3cm
+   Location: presumably in the antrum, given the context
+   
+   For duodenal polyp:
+   Location: descending part
+   Size: 0.5cm
+   Type: hyperplastic (benign)
+
+   Q: What classification is indicated?
+   A: Based on standard protocol, the findings indicate:
+   
+   1. Esophageal varices with high-risk features (red signs)
+   2. Portal hypertensive gastropathy
+   3. Gastric ulcer
+   4. Duodenal hyperplastic polyp
+   
+   All of these represent either benign conditions or manifestations of portal hypertension, which while potentially serious from a bleeding risk perspective, is not a malignant condition. The gastric ulcer is small (0.3cm) without reported features suggesting malignancy. The duodenal polyp is specifically identified as hyperplastic, which is a benign histological type. Therefore, the appropriate classification is "Benign".
+
+   Q: Is supporting evidence documented?
+   A: Yes, adequate supporting evidence is documented:
+   
+   For esophageal varices:
+   Location beyond 30cm
+   Presence of red signs
+   Sclerotherapy intervention
+   
+   For portal hypertensive gastropathy:
+   Characteristic mosaic pattern
+   
+   For gastric ulcer:
+   Size (0.3cm)
+   Associated antral erosions
+   
+   For duodenal polyp:
+   Location in descending part
+   Size (0.5cm)
+   Hyperplastic type
+   
+   For benign classification:
+   No features suggesting malignancy
+   Hyperplastic nature of the duodenal polyp
+   Small size of gastric ulcer
+   
+   The documentation provides sufficient evidence to support both the diagnoses and the benign classification.
+
+3. Compliant Documentation:
+   Q: Is diagnosis properly formatted?
+   A: Yes, the endoscopic diagnosis is properly formatted according to standard documentation guidelines:
+   Each distinct pathological entity is listed separately
+   Interventions performed are documented
+   Specific diagnostic terminology (portal hypertensive gastropathy) is appropriately used
+
+   Q: Are all required elements included?
+   A: Yes, all required elements for documentation are included:
+   Findings for all examined anatomical regions are documented
+   Pathological findings are described with appropriate detail
+   Interventions performed are documented
+   
+   The documentation provides sufficient information to support the diagnoses and classification.
+
+   Q: Does assessment meet guidelines?
+   A: Yes, the assessment meets standard upper GI endoscopy reporting guidelines:
+   All examined segments are documented
+   Lesions are described with appropriate detail
+   Interventions are documented
+   
+   The reporting is compliant with standard medical documentation requirements.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Esophageal varices",
+        "portal hypertensive gastropathy",
+        "gastric ulcer",
+        "duodenal polyp"
+    ],
+    "classification": "Benign"
+}
+
+## Example 4:
+Gender: Female
+Age: 63
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Seven flat polyps seen, size ranging from 0.2cm-0.6cm, larger ones removed by snare electrocautery, smaller ones partially removed by biopsy forceps and electrocautery ablation. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly red, one shallow ulcer approximately 0.2cm, surface covered with thin white coating, surrounding mucosa congested and edematous, scattered punctate and patchy erosions also seen. Pylorus: Round, opens and closes well. Duodenum: No abnormalities in bulb and descending portion.
+Endoscopic Diagnosis: Gastric ulcer (A2), multiple gastric body polyps (electrocautery + electrocautery ablation + polypectomy), chronic non-atrophic gastritis with erosions.
+
+### Reasoning:
+1. Standard Diagnostic Evaluation:
+   Q: Following protocol, what diagnostic criteria apply?
+   A: According to standard endoscopic diagnostic criteria for upper GI examination, the following apply:
+   
+   For gastric polyps, diagnostic criteria include:
+   Location
+   Number
+   Size
+   Morphology (flat, sessile, pedunculated)
+   Intervention performed
+   
+   For gastric ulcer, diagnostic criteria include:
+   Location
+   Size
+   Appearance (including coating, surrounding mucosa)
+   Sakita classification (A1-A2 for active, H1-H2 for healing, S1-S2 for scar)
+   
+   For gastritis, diagnostic criteria include:
+   Distribution (antrum, body, diffuse)
+   Type (non-atrophic, atrophic, erosive)
+   Appearance (mottled, erythematous)
+   Presence of erosions
+
+   Q: What classifications are recognized?
+   A: Standard endoscopic classifications for these findings include:
+   
+   For gastric polyps:
+   Histological type (fundic gland, hyperplastic, adenomatous)
+   Risk assessment based on size and number
+   
+   For gastric ulcer:
+   Sakita classification (A2 indicates active ulcer in the healing stage)
+   Forrest classification for bleeding risk (not applicable here)
+   Benign vs. malignant features
+   
+   For gastritis:
+   Sydney classification (not detailed in this report)
+   Erosive vs. non-erosive
+   Atrophic vs. non-atrophic
+   
+   For overall classification:
+   Benign: all lesions appear benign
+   Malignant: any lesion has features strongly suggestive of malignancy
+   Precancerous: lesions with high risk for malignant transformation
+
+   Q: What evidence must be documented?
+   A: According to documentation protocols, the following evidence must be documented:
+   
+   For gastric polyps:
+   Location
+   Number
+   Size range
+   Morphology
+   Intervention performed
+   
+   For gastric ulcer:
+   Location
+   Size
+   Appearance (including coating, surrounding mucosa)
+   Stage classification
+   
+   For gastritis:
+   Distribution
+   Appearance
+   Presence and extent of erosions
+   
+   For classification purposes:
+   Features suggesting benign vs. malignant nature
+   Presence of high-risk features
+
+2. Protocol-Based Classification:
+   Q: Do findings meet diagnostic criteria?
+   A: Yes, the findings meet standard diagnostic criteria:
+   
+   For multiple gastric body polyps:
+   Location: gastric body
+   Number: seven
+   Size range: 0.2cm-0.6cm
+   Morphology: flat
+   Intervention: larger ones removed by snare electrocautery, smaller ones by biopsy forceps and electrocautery ablation
+   
+   For gastric ulcer (A2):
+   Location: antrum
+   Size: approximately 0.2cm
+   Appearance: shallow with thin white coating (fibrin), surrounding mucosa congested and edematous
+   Classification: A2 (active ulcer in healing stage)
+   
+   For chronic non-atrophic gastritis with erosions:
+   Distribution: antrum
+   Appearance: mucosa mottled red and white predominantly red
+   Erosions: scattered punctate and patchy
+   Type: non-atrophic (no mention of atrophy)
+
+   Q: What classification is indicated?
+   A: Based on standard protocol, the findings indicate:
+   
+   1. Multiple gastric body polyps
+   2. Gastric ulcer (A2)
+   3. Chronic non-atrophic gastritis with erosions
+   
+   All of these represent benign conditions. The gastric polyps are small (0.2-0.6cm), flat, and were amenable to standard endoscopic removal techniques, which are features consistent with benign fundic gland polyps. The gastric ulcer is small (0.2cm), shallow, with white coating and surrounding inflammation, consistent with a benign peptic ulcer in the healing phase (A2). The gastritis has features of a benign inflammatory condition. Therefore, the appropriate classification is "Benign".
+
+   Q: Is supporting evidence documented?
+   A: Yes, adequate supporting evidence is documented:
+   
+   For multiple gastric body polyps:
+   Location, number, size range, and morphology are clearly documented
+   Interventions performed are detailed
+   
+   For gastric ulcer (A2):
+   Size, appearance, and surrounding mucosal changes are documented
+   The A2 classification in the diagnosis is consistent with the described appearance
+   
+   For chronic non-atrophic gastritis with erosions:
+   Mucosal appearance and distribution of erosions are documented
+   
+   For benign classification:
+   Small size and flat morphology of polyps
+   Small size, shallow depth, and healing appearance of ulcer
+   Typical features of benign gastritis
+   
+   The documentation provides sufficient evidence to support both the diagnoses and the benign classification.
+
+3. Compliant Documentation:
+   Q: Is diagnosis properly formatted?
+   A: Yes, the endoscopic diagnosis is properly formatted according to standard documentation guidelines:
+   Each distinct pathological entity is listed separately
+   Ulcer staging (A2) is included
+   Interventions performed are documented
+   Descriptive terminology is used appropriately
+
+   Q: Are all required elements included?
+   A: Yes, all required elements for documentation are included:
+   Findings for all examined anatomical regions are documented
+   Pathological findings are described with appropriate detail
+   Interventions performed are documented
+   
+   The documentation provides sufficient information to support the diagnoses and classification.
+
+   Q: Does assessment meet guidelines?
+   A: Yes, the assessment meets standard upper GI endoscopy reporting guidelines:
+   All examined segments are documented
+   Normal and abnormal findings are described with appropriate detail
+   Lesions are measured and characterized
+   Interventions are documented
+   
+   The reporting is compliant with standard medical documentation requirements.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Gastric ulcer",
+        "multiple gastric body polyps",
+        "chronic non-atrophic gastritis with erosions"
+    ],
+    "classification": "Benign"
+}
+
+## Example 5:
+Gender: Female
+Age: 48
+Endoscopic Findings: Esophagus: Scattered patchy mucosal defects >5mm in lower portion, non-confluent. Cardia: Clear Z-line, normal position with smooth mucosa. Gastric fundus: Smooth mucosa with clear minimal mucus. Gastric body: 4mm flat polyp on upper greater curvature, smooth surface, removed by biopsy forceps. Gastric angle: Normal morphology with smooth mucosa and preserved curvature. Gastric antrum: Red and white mottled mucosa, predominantly red, with scattered patchy erosions. Pylorus: Round with good function. Duodenum: Unremarkable bulb and descending portion.
+Endoscopic Diagnosis: Grade B reflux esophagitis, gastric body polyp (polypectomy performed), chronic non-atrophic gastritis with erosions.
+
+### Reasoning:
+1. Standard Diagnostic Evaluation:
+   Q: Following protocol, what diagnostic criteria apply?
+   A: According to standard endoscopic diagnostic criteria for upper GI examination, the following apply:
+   
+   For reflux esophagitis, diagnostic criteria include:
+   Location: typically lower esophagus
+   Mucosal breaks/defects
+   Los Angeles Classification: Grade A-D based on extent of lesions
+   
+   For gastric polyp, diagnostic criteria include:
+   Location
+   Size
+   Morphology (flat, sessile, pedunculated)
+   Surface features
+   Intervention performed
+   
+   For gastritis, diagnostic criteria include:
+   Distribution (antrum, body, diffuse)
+   Type (non-atrophic, atrophic, erosive)
+   Appearance (mottled, erythematous)
+   Presence of erosions
+
+   Q: What classifications are recognized?
+   A: Standard endoscopic classifications for these findings include:
+   
+   For reflux esophagitis:
+   Los Angeles Classification:
+     Grade A: One or more mucosal breaks ≤5mm
+     Grade B: One or more mucosal breaks >5mm, not continuous
+     Grade C: Mucosal breaks continuous between tops of ≥2 folds, involving <75% circumference
+     Grade D: Mucosal breaks involving ≥75% of esophageal circumference
+   
+   For gastric polyp:
+   Histological type (fundic gland, hyperplastic, adenomatous)
+   Risk assessment based on size
+   
+   For gastritis:
+   Sydney classification (not detailed in this report)
+   Erosive vs. non-erosive
+   Atrophic vs. non-atrophic
+   
+   For overall classification:
+   Benign: all lesions appear benign
+   Malignant: any lesion has features strongly suggestive of malignancy
+   Precancerous: lesions with high risk for malignant transformation
+
+   Q: What evidence must be documented?
+   A: According to documentation protocols, the following evidence must be documented:
+   
+   For reflux esophagitis:
+   Location
+   Description of mucosal breaks (size, configuration)
+   Grade according to LA Classification
+   
+   For gastric polyp:
+   Location
+   Size
+   Morphology
+   Surface features
+   Intervention performed
+   
+   For gastritis:
+   Distribution
+   Appearance
+   Presence and extent of erosions
+   
+   For classification purposes:
+   Features suggesting benign vs. malignant nature
+   Presence of high-risk features
+
+2. Protocol-Based Classification:
+   Q: Do findings meet diagnostic criteria?
+   A: Yes, the findings meet standard diagnostic criteria:
+   
+   For Grade B reflux esophagitis:
+   Location: lower esophagus
+   Description: scattered patchy mucosal defects >5mm, non-confluent
+   This precisely matches the LA Classification criteria for Grade B
+   
+   For gastric body polyp:
+   Location: upper greater curvature of gastric body
+   Size: 4mm
+   Morphology: flat with smooth surface
+   Intervention: removed by biopsy forceps
+   
+   For chronic non-atrophic gastritis with erosions:
+   Distribution: antrum
+   Appearance: red and white mottled mucosa, predominantly red
+   Erosions: scattered patchy
+   Type: non-atrophic (no mention of atrophy)
+
+   Q: What classification is indicated?
+   A: Based on standard protocol, the findings indicate:
+   
+   1. Grade B reflux esophagitis
+   2. Gastric body polyp
+   3. Chronic non-atrophic gastritis with erosions
+   
+   All of these represent benign conditions. The reflux esophagitis, while potentially causing discomfort and complications if untreated, is a benign inflammatory condition. The gastric polyp is small (4mm), flat, with a smooth surface, all features consistent with a benign lesion. The gastritis has features of a benign inflammatory condition. Therefore, the appropriate classification is "Benign".
+
+   Q: Is supporting evidence documented?
+   A: Yes, adequate supporting evidence is documented:
+   
+   For Grade B reflux esophagitis:
+   The description "scattered patchy mucosal defects >5mm in lower portion, non-confluent" precisely matches the LA Classification criteria for Grade B
+   
+   For gastric body polyp:
+   Location, size, morphology, and intervention are clearly documented
+   
+   For chronic non-atrophic gastritis with erosions:
+   Mucosal appearance and distribution of erosions are documented
+   
+   For benign classification:
+   Typical appearance of reflux esophagitis
+   Small size and smooth surface of gastric polyp
+   Typical features of benign gastritis
+   
+   The documentation provides sufficient evidence to support both the diagnoses and the benign classification.
+
+3. Compliant Documentation:
+   Q: Is diagnosis properly formatted?
+   A: Yes, the endoscopic diagnosis is properly formatted according to standard documentation guidelines:
+   Each distinct pathological entity is listed separately
+   Reflux esophagitis is appropriately graded
+   Intervention performed is documented
+   Descriptive terminology is used appropriately
+
+   Q: Are all required elements included?
+   A: Yes, all required elements for documentation are included:
+   Findings for all examined anatomical regions are documented
+   Pathological findings are described with appropriate detail
+   Intervention performed is documented
+   
+   The documentation provides sufficient information to support the diagnoses and classification.
+
+   Q: Does assessment meet guidelines?
+   A: Yes, the assessment meets standard upper GI endoscopy reporting guidelines:
+   All examined segments are documented
+   Normal and abnormal findings are described with appropriate detail
+   Lesions are measured and characterized
+   Intervention is documented
+   
+   The reporting is compliant with standard medical documentation requirements.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Grade B reflux esophagitis",
+        "gastric body polyp",
+        "chronic non-atrophic gastritis with erosions"
+    ],
+    "classification": "Benign"
+}
+
+
+Case to analyze:
+{case_data}

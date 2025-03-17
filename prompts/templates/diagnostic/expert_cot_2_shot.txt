@@ -1,0 +1,204 @@
+# prompts/templates/diagnostic_assessment/expert_cot_2_shot.txt
+[Include standard format and terminology definitions]
+
+You are an experienced endoscopist. Let's evaluate this case:
+
+1. Professional Observation:
+   Q: Based on my clinical experience, what do I observe?
+   A: Document key findings
+   Q: What characteristics suggest specific diagnoses?
+   A: Note diagnostic features
+
+2. Clinical Reasoning:
+   Q: Given these findings, what are the likely diagnoses?
+   A: List diagnostic possibilities
+   Q: What endoscopic evidence supports each diagnosis?
+   A: Link findings to diagnoses
+
+3. Diagnostic Classification:
+   Q: Based on visual appearance, is this benign, malignant, or precancerous?
+   A: Classify according to standards
+   Q: Do the endoscopic findings support this classification?
+   A: Verify diagnostic criteria
+
+Return valid JSON following schema for diagnostic assessment.
+
+FORMAT RULES:
+1. Use exact quotes from endoscopic diagnosis section
+2. Do not include any information from histopathological findings
+3. Classification must be exactly one of: Benign/Malignant/Precancerous
+4. Every response must include both diagnoses and classification
+5. Suggested diagnoses must not be empty
+
+INPUT INFORMATION:
+- Gender
+- Age
+- Endoscopic Findings
+- Endoscopic Diagnosis ONLY
+
+REQUIRED OUTPUT FORMAT:
+{
+    "suggested_diagnoses": ["string"],  // Direct quotes from endoscopic diagnosis section
+    "classification": "Benign/Malignant/Precancerous"  // Must use exact terms
+}
+
+Note: DO NOT use histopathological findings in assessment.
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+Endoscopic Diagnosis: Duodenal bulbitis, multiple descending duodenal ulcers, chronic non-atrophic gastritis with erosions.
+
+### Reasoning:
+1. Professional Observation:
+   Q: Based on my clinical experience, what do I observe?
+   A: As an experienced endoscopist, I observe several significant findings in this examination:
+   
+   In the stomach, I note a mottled red and white mucosa in both the body and antrum, which is a characteristic appearance of chronic gastritis. The antrum specifically shows scattered punctate and patchy erosions, indicating active inflammation with superficial mucosal damage.
+   
+   In the duodenum, the bulb demonstrates mucosal congestion without discrete lesions, consistent with duodenal bulbitis. More significantly, the descending portion contains multiple shallow ulcers with yellow-black coating, which represents fibrinopurulent exudate covering active ulcerations.
+   
+   The remaining examined areas including esophagus, cardia, fundus, angle, and pylorus appear endoscopically normal.
+
+   Q: What characteristics suggest specific diagnoses?
+   A: The mottled red and white appearance of the gastric mucosa is highly characteristic of chronic gastritis. The presence of erosions in the antrum indicates an active component to this gastritis. Importantly, the gastritis appears non-atrophic, as there is no significant pallor or thinning of the mucosa.
+   
+   The mucosal congestion in the duodenal bulb without discrete ulceration is the hallmark of duodenal bulbitis, which represents inflammation without ulcer formation.
+   
+   The multiple shallow ulcers with yellow-black coating in the duodenal descending portion are typical of active duodenal ulcer disease. The yellow-black appearance represents fibrinopurulent exudate, which suggests an acute inflammatory process. Their shallow nature and multiplicity suggest a benign etiology, most likely peptic in nature.
+
+2. Clinical Reasoning:
+   Q: Given these findings, what are the likely diagnoses?
+   A: Based on my endoscopic observations, the likely diagnoses are:
+   
+   1. Chronic non-atrophic gastritis with erosions - supported by the mottled appearance of the gastric mucosa and the presence of erosions in the antrum.
+   
+   2. Duodenal bulbitis - supported by the mucosal congestion observed in the duodenal bulb.
+   
+   3. Multiple descending duodenal ulcers - directly visualized as multiple shallow ulcers with fibrinopurulent exudate in the descending portion of the duodenum.
+   
+   These diagnoses correlate with the stated endoscopic diagnosis.
+
+   Q: What endoscopic evidence supports each diagnosis?
+   A: For chronic non-atrophic gastritis with erosions, the supporting evidence includes the mottled red and white appearance of the gastric mucosa (a classic sign of chronic inflammation) and the scattered punctate and patchy erosions seen in the antrum (indicating active mucosal damage).
+   
+   For duodenal bulbitis, the supporting evidence is the mucosal congestion observed in the duodenal bulb without discrete ulcerations, which represents inflammation of this segment.
+   
+   For multiple descending duodenal ulcers, the direct endoscopic evidence is the visualization of multiple shallow ulcers covered with yellow-black coating (fibrinopurulent exudate) in the descending portion of the duodenum.
+
+3. Diagnostic Classification:
+   Q: Based on visual appearance, is this benign, malignant, or precancerous?
+   A: Based on my clinical experience and the endoscopic appearance of these lesions, this case is clearly benign. The gastritis has a typical appearance of a benign inflammatory condition. The duodenal ulcers, though active, have characteristics consistent with benign peptic ulcer disease - they are shallow, multiple, and have fibrinopurulent exudate.
+   
+   There are no concerning features that would suggest malignancy, such as:
+   - No masses or space-occupying lesions
+   - No deep, excavated ulcers with irregular borders
+   - No raised, everted, or nodular ulcer edges
+   - No abnormal or friable vascularity
+   - No strictures or other concerning structural changes
+
+   Q: Do the endoscopic findings support this classification?
+   A: Yes, the endoscopic findings strongly support a benign classification. All observed lesions have classic features of benign conditions:
+   
+   The gastritis shows a typical mottled appearance without mass lesions or areas of dysplasia. The erosions are superficial and scattered, which is consistent with benign inflammatory changes.
+   
+   The duodenal bulbitis presents as simple mucosal congestion without suspicious features.
+   
+   The duodenal ulcers, while multiple and active (as evidenced by the fibrinopurulent exudate), are shallow with regular borders and without features suspicious for malignancy. The multiplicity of shallow ulcers is more typical of a benign inflammatory process than a malignant one.
+   
+   The patient's age (74) would warrant caution for malignancy, but the endoscopic appearance of all lesions is reassuringly benign.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Duodenal bulbitis",
+        "multiple descending duodenal ulcers",
+        "chronic non-atrophic gastritis with erosions"
+    ],
+    "classification": "Benign"
+}
+
+## Example 2:
+Gender: Male
+Age: 73
+Endoscopic Findings: Ileocecal valve: normal. Terminal ileum: normal. Ascending colon: 0.8cm sub-pedunculated polyp, EMR performed, defect clipped. Transverse colon: two 0.6-0.7cm sub-pedunculated polyps, EMR performed, defects clipped. Descending colon: 1.5×1.0cm irregular mass at 36cm, friable, thrombin spray applied. Sigmoid: multiple 0.3-0.5cm polyps removed by forceps. Rectum: normal with internal hemorrhoids. Insertion time: 7min, withdrawal time: 15min. Boston Bowel Prep Score: 5.
+Endoscopic Diagnosis: Descending colon mass - nature undetermined, hemostasis performed; multiple colonic polyps (EMR and forceps removal), internal hemorrhoids, poor bowel prep, recommend early repeat examination.
+
+### Reasoning:
+1. Professional Observation:
+   Q: Based on my clinical experience, what do I observe?
+   A: As an experienced endoscopist, I observe several significant findings in this colonoscopy:
+   
+   Multiple polyps are distributed throughout the colon:
+   - One 0.8cm sub-pedunculated polyp in the ascending colon
+   - Two 0.6-0.7cm sub-pedunculated polyps in the transverse colon
+   - Multiple smaller (0.3-0.5cm) polyps in the sigmoid
+   
+   Most concerning is a 1.5×1.0cm irregular mass in the descending colon at 36cm, which is described as friable (bleeds easily) and required thrombin spray for hemostasis.
+   
+   The terminal ileum and ileocecal valve appear normal, and the rectum shows internal hemorrhoids but is otherwise normal.
+   
+   The Boston Bowel Prep Score of 5 indicates suboptimal preparation, which may affect lesion detection.
+
+   Q: What characteristics suggest specific diagnoses?
+   A: The most significant finding is the descending colon mass, which has several concerning features:
+   - Larger size (1.5×1.0cm) compared to the other polyps
+   - Irregular shape (as opposed to smooth or regular contours)
+   - Friability (bleeding easily when touched)
+   - Requiring thrombin spray for hemostasis
+   
+   These features are worrisome for a potential malignancy. The irregular shape and friability, in particular, are classic features that raise concern for a more aggressive lesion rather than a simple adenomatous polyp.
+   
+   The remaining polyps have features more consistent with benign or precancerous adenomas - they are smaller, sub-pedunculated, and without irregular features. Their distribution across multiple colonic segments is consistent with a polyposis syndrome or sporadic adenomas.
+   
+   The internal hemorrhoids are an incidental finding and are benign vascular cushions.
+
+2. Clinical Reasoning:
+   Q: Given these findings, what are the likely diagnoses?
+   A: Based on my endoscopic observations, the likely diagnoses are:
+   
+   1. Descending colon mass - the 1.5×1.0cm irregular, friable lesion at 36cm has concerning features for a potential malignancy. While the endoscopic diagnosis notes "nature undetermined," the features are suspicious enough to warrant consideration as a colonic malignant tumor.
+   
+   2. Multiple colonic polyps - the presence of multiple polyps across different colonic segments is consistent with adenomatous polyps, likely sporadic but possibly part of a polyposis syndrome.
+   
+   3. Internal hemorrhoids - a benign finding in the rectum.
+   
+   The poor bowel preparation noted in the diagnosis is a technical limitation rather than a diagnosis.
+
+   Q: What endoscopic evidence supports each diagnosis?
+   A: For the descending colon mass, the supporting evidence includes its size (1.5×1.0cm), irregular shape, friability (requiring thrombin spray), and distinct appearance compared to the other polyps. These features together raise significant concern for malignancy.
+   
+   For multiple colonic polyps, the direct visualization of multiple polyps in the ascending colon, transverse colon, and sigmoid colon provides clear evidence. Their sub-pedunculated morphology is typical of adenomatous polyps.
+   
+   For internal hemorrhoids, direct visualization in the rectum confirms this diagnosis.
+
+3. Diagnostic Classification:
+   Q: Based on visual appearance, is this benign, malignant, or precancerous?
+   A: Based on my clinical experience and the endoscopic appearance of these lesions, this case should be classified as malignant. While most of the polyps have benign or precancerous features, the descending colon mass has multiple concerning characteristics that strongly suggest malignancy:
+   - Size > 1cm
+   - Irregular shape
+   - Friable surface (bleeds easily)
+   - Required thrombin spray hemostasis
+   
+   As an experienced endoscopist, when I encounter a lesion with these features, I have a high index of suspicion for malignancy. The classification is based on the most concerning lesion present, which in this case is the descending colon mass.
+
+   Q: Do the endoscopic findings support this classification?
+   A: Yes, the endoscopic findings strongly support a malignant classification. While the smaller polyps in the ascending, transverse, and sigmoid colon likely represent benign or precancerous adenomas, the descending colon mass has features that are highly concerning for malignancy.
+   
+   The patient's age (73) further increases the pre-test probability of colorectal malignancy, as colorectal cancer risk increases significantly after age 50 and continues to rise with advancing age.
+   
+   While definitive diagnosis would require histopathological confirmation, the endoscopic appearance alone is sufficient to classify this case as malignant based on the descending colon mass. The clinical diagnosis also includes "colonic malignant tumor," supporting this assessment.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Descending colon mass",
+        "multiple colonic polyps",
+        "colonic malignant tumor"
+    ],
+    "classification": "Malignant"
+}
+
+Case to analyze:
+{case_data}

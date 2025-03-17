@@ -1,0 +1,197 @@
+# prompts/templates/diagnostic_assessment/clinical_protocol_1_shot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data analyst. Let's follow clinical protocol:
+
+1. Standard Diagnostic Evaluation:
+   Q: Following protocol, what diagnostic criteria apply?
+   A: Review standard criteria
+   Q: What classifications are recognized?
+   A: List approved categories
+   Q: What evidence must be documented?
+   A: Note requirements
+
+2. Protocol-Based Classification:
+   Q: Do findings meet diagnostic criteria?
+   A: Compare to standards
+   Q: What classification is indicated?
+   A: Apply standard categories
+   Q: Is supporting evidence documented?
+   A: Verify documentation
+
+3. Compliant Documentation:
+   Q: Is diagnosis properly formatted?
+   A: Check standard format
+   Q: Are all required elements included?
+   A: Review completeness
+   Q: Does assessment meet guidelines?
+   A: Confirm compliance
+
+Return valid JSON following schema for diagnostic assessment.
+
+FORMAT RULES:
+1. Use exact quotes from endoscopic diagnosis section
+2. Do not include any information from histopathological findings
+3. Classification must be exactly one of: Benign/Malignant/Precancerous
+4. Every response must include both diagnoses and classification
+5. Suggested diagnoses must not be empty
+
+INPUT INFORMATION:
+- Gender
+- Age
+- Endoscopic Findings
+- Endoscopic Diagnosis ONLY
+
+REQUIRED OUTPUT FORMAT:
+{
+    "suggested_diagnoses": ["string"],  // Direct quotes from endoscopic diagnosis section
+    "classification": "Benign/Malignant/Precancerous"  // Must use exact terms
+}
+
+Note: DO NOT use histopathological findings in assessment.
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+Endoscopic Diagnosis: Duodenal bulbitis, multiple descending duodenal ulcers, chronic non-atrophic gastritis with erosions.
+
+### Reasoning:
+1. Standard Diagnostic Evaluation:
+   Q: Following protocol, what diagnostic criteria apply?
+   A: According to standard endoscopic diagnostic criteria for upper GI examination, the following apply:
+   
+   For gastritis, diagnostic criteria include:
+   Mucosal erythema, often with mottled red and white appearance
+   Presence of superficial erosions
+   Absence of significant mucosal atrophy (for non-atrophic classification)
+   
+   For duodenal bulbitis, diagnostic criteria include:
+   Mucosal congestion and edema in the duodenal bulb
+   Absence of frank ulceration in the bulb itself
+   
+   For duodenal ulcers, diagnostic criteria include:
+   Discrete mucosal breaks reaching the submucosa
+   Often covered with fibrinopurulent exudate (yellow-black coating)
+   May be single or multiple
+
+   Q: What classifications are recognized?
+   A: Standard endoscopic classifications for these findings include:
+   
+   For gastritis:
+   Erythematous/exudative (non-atrophic)
+   Erosive
+   Atrophic
+   Hemorrhagic
+   
+   For duodenal ulcers:
+   Active (A1-A2)
+   Healing (H1-H2)
+   Scarred (S1-S2)
+   
+   For benign vs. malignant classification:
+   Benign: Regular borders, flat or slightly raised edges, clear base
+   Malignant: Irregular borders, raised/nodular edges, excavated appearance
+   Precancerous: Intestinal metaplasia, dysplasia, or suspicious mucosal patterns
+
+   Q: What evidence must be documented?
+   A: According to documentation protocols, the following evidence must be documented:
+   
+   For gastritis:
+   Distribution (antrum, body, diffuse)
+   Appearance (mottled, erythematous, etc.)
+   Presence and extent of erosions
+   
+   For duodenal bulbitis:
+   Mucosal changes without ulceration
+   
+   For duodenal ulcers:
+   Location
+   Number (single vs. multiple)
+   Size (if measured)
+   Appearance (including exudate)
+   
+   For classification purposes:
+   Features suggesting benign vs. malignant nature
+   Presence of high-risk features
+
+2. Protocol-Based Classification:
+   Q: Do findings meet diagnostic criteria?
+   A: Yes, the findings meet standard diagnostic criteria:
+   
+   For chronic non-atrophic gastritis with erosions:
+   Mottled red and white mucosa in the gastric body and antrum
+   Scattered punctate and patchy erosions in the antrum
+   No mention of atrophic changes
+   
+   For duodenal bulbitis:
+   Mucosal congestion in the duodenal bulb
+   No ulceration described in the bulb
+   
+   For multiple descending duodenal ulcers:
+   Multiple shallow ulcers in the descending portion
+   Yellow-black coating (fibrinopurulent exudate), indicating active lesions
+
+   Q: What classification is indicated?
+   A: Based on standard protocol, the findings indicate:
+   
+   1. Chronic non-atrophic gastritis with erosions
+   2. Duodenal bulbitis
+   3. Multiple descending duodenal ulcers
+   
+   All of these represent benign inflammatory conditions. The duodenal ulcers, while active as evidenced by the yellow-black coating, have features consistent with benign peptic ulcer disease (multiple, shallow, with exudate). There are no features suggesting malignancy, such as irregular borders, deep excavation, or raised nodular edges. Therefore, the appropriate classification is "Benign".
+
+   Q: Is supporting evidence documented?
+   A: Yes, adequate supporting evidence is documented:
+   
+   For chronic non-atrophic gastritis with erosions:
+   The mottled appearance of the gastric mucosa is documented
+   The scattered erosions in the antrum are specifically noted
+   
+   For duodenal bulbitis:
+   The mucosal congestion in the duodenal bulb is documented
+   
+   For multiple descending duodenal ulcers:
+   The location in the descending duodenum is specified
+   The multiplicity of the ulcers is noted
+   The presence of yellow-black coating (exudate) is documented
+   
+   For benign classification:
+   The shallow nature of the ulcers and typical exudate is documented
+   No concerning features for malignancy are described
+
+3. Compliant Documentation:
+   Q: Is diagnosis properly formatted?
+   A: Yes, the endoscopic diagnosis is properly formatted according to standard documentation guidelines:
+   Each distinct pathological entity is listed separately
+   Anatomical locations are specified
+   Descriptive terminology is used appropriately
+
+   Q: Are all required elements included?
+   A: Yes, all required elements for documentation are included:
+   Findings for all examined anatomical regions are documented
+   Pathological findings are described with appropriate detail
+   The endoscopic diagnosis summarizes the key findings
+   
+   The documentation provides sufficient information to support the diagnoses and classification.
+
+   Q: Does assessment meet guidelines?
+   A: Yes, the assessment meets standard endoscopic reporting guidelines:
+   The description of findings is specific and detailed
+   The diagnoses are consistent with the documented findings
+   The classification as benign is supported by the endoscopic features
+   
+   The reporting is compliant with standard medical documentation requirements.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Duodenal bulbitis",
+        "multiple descending duodenal ulcers",
+        "chronic non-atrophic gastritis with erosions"
+    ],
+    "classification": "Benign"
+}
+
+Case to analyze:
+{case_data}

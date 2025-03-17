@@ -1,0 +1,303 @@
+# prompts/templates/diagnostic_assessment/basic_step_cot_5_shot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data analyst. Let's evaluate diagnostic findings:
+
+1. Visual Finding Review:
+   Q: What endoscopic findings are observed?
+   A: List using standard terminology
+   Q: What are their characteristics?
+   A: Document key features
+
+2. Diagnostic Analysis:
+   Q: Based on endoscopic findings only, what diagnoses are suggested?
+   A: List potential diagnoses
+   Q: What evidence supports each diagnosis?
+   A: Link to specific findings
+
+3. Classification:
+   Q: Do findings suggest benign/malignant/precancerous?
+   A: Classify based on visual characteristics only
+   Q: Is classification supported by findings?
+   A: Verify evidence
+
+Return valid JSON following schema for diagnostic assessment.
+
+FORMAT RULES:
+1. Use exact quotes from endoscopic diagnosis section
+2. Do not include any information from histopathological findings
+3. Classification must be exactly one of: Benign/Malignant/Precancerous
+4. Every response must include both diagnoses and classification
+5. Suggested diagnoses must not be empty
+
+INPUT INFORMATION:
+- Gender
+- Age
+- Endoscopic Findings
+- Endoscopic Diagnosis ONLY
+
+REQUIRED OUTPUT FORMAT:
+{
+    "suggested_diagnoses": ["string"],  // Direct quotes from endoscopic diagnosis section
+    "classification": "Benign/Malignant/Precancerous"  // Must use exact terms
+}
+
+Note: DO NOT use histopathological findings in assessment.
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+Endoscopic Diagnosis: Duodenal bulbitis, multiple descending duodenal ulcers, chronic non-atrophic gastritis with erosions.
+
+### Reasoning:
+1. Visual Finding Review:
+   Q: What endoscopic findings are observed?
+   A: The key endoscopic findings are:
+   Mottled red and white mucosa in the gastric body (predominantly red)
+   Mottled red and white mucosa in the gastric antrum (predominantly white)
+   Scattered punctate and patchy erosions in the gastric antrum
+   Mucosal congestion in the duodenal bulb
+   Multiple shallow ulcers in the duodenal descending portion covered with yellow-black coating
+
+   Q: What are their characteristics?
+   A: The gastric mucosa shows a mottled red and white appearance, suggesting inflammation. The antral erosions are described as punctate and patchy, indicating superficial mucosal damage. The duodenal bulb shows congestion without discrete lesions. The duodenal ulcers are described as multiple, shallow, and covered with yellow-black coating (fibrinopurulent exudate), suggesting an active inflammatory process.
+
+2. Diagnostic Analysis:
+   Q: Based on endoscopic findings only, what diagnoses are suggested?
+   A: Based solely on the endoscopic findings, the suggested diagnoses are:
+   Duodenal bulbitis (inflammation of the duodenal bulb)
+   Multiple descending duodenal ulcers
+   Chronic non-atrophic gastritis with erosions
+
+   Q: What evidence supports each diagnosis?
+   A: 
+   Duodenal bulbitis: Supported by the observation of mucosal congestion in the duodenal bulb
+   Multiple descending duodenal ulcers: Directly observed as multiple shallow ulcers in the duodenal descending portion with yellow-black coating
+   Chronic non-atrophic gastritis with erosions: Supported by the mottled red and white appearance of the gastric mucosa and the scattered punctate and patchy erosions in the antrum
+
+3. Classification:
+   Q: Do findings suggest benign/malignant/precancerous?
+   A: The findings suggest a benign condition. The gastric changes are consistent with chronic gastritis, which is a benign inflammatory condition. The duodenal ulcers, while indicating active disease, have typical benign characteristics (shallow, multiple, with fibrinopurulent exudate). There are no features suggesting malignancy, such as irregular borders, mass lesions, or deep ulceration with raised edges.
+
+   Q: Is classification supported by findings?
+   A: Yes, the classification as benign is well-supported by the endoscopic findings. All observed lesions have typical features of benign inflammatory conditions with no suspicious characteristics that would suggest malignancy or precancerous changes.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Duodenal bulbitis",
+        "multiple descending duodenal ulcers",
+        "chronic non-atrophic gastritis with erosions"
+    ],
+    "classification": "Benign"
+}
+
+## Example 2:
+Gender: Male
+Age: 73
+Endoscopic Findings: Ileocecal valve: normal. Terminal ileum: normal. Ascending colon: 0.8cm sub-pedunculated polyp, EMR performed, defect clipped. Transverse colon: two 0.6-0.7cm sub-pedunculated polyps, EMR performed, defects clipped. Descending colon: 1.5×1.0cm irregular mass at 36cm, friable, thrombin spray applied. Sigmoid: multiple 0.3-0.5cm polyps removed by forceps. Rectum: normal with internal hemorrhoids. Insertion time: 7min, withdrawal time: 15min. Boston Bowel Prep Score: 5.
+Endoscopic Diagnosis: Descending colon mass - nature undetermined, hemostasis performed; multiple colonic polyps (EMR and forceps removal), internal hemorrhoids, poor bowel prep, recommend early repeat examination.
+
+### Reasoning:
+1. Visual Finding Review:
+   Q: What endoscopic findings are observed?
+   A: The key endoscopic findings are:
+   0.8cm sub-pedunculated polyp in ascending colon
+   Two 0.6-0.7cm sub-pedunculated polyps in transverse colon
+   1.5×1.0cm irregular mass in descending colon, described as friable
+   Multiple 0.3-0.5cm polyps in sigmoid colon
+   Internal hemorrhoids in rectum
+
+   Q: What are their characteristics?
+   A: Most polyps are sub-pedunculated and relatively small (0.3-0.8cm). However, the descending colon contains a larger (1.5×1.0cm) irregular mass that is friable (bleeds easily when touched), which is concerning for possible malignancy. The friability required thrombin spray for hemostasis, suggesting significant vascularity.
+
+2. Diagnostic Analysis:
+   Q: Based on endoscopic findings only, what diagnoses are suggested?
+   A: Based solely on the endoscopic findings, the suggested diagnoses are:
+   Descending colon mass (nature undetermined)
+   Multiple colonic polyps
+   Internal hemorrhoids
+   The endoscopic diagnosis also mentions colonic malignant tumor, suggesting the mass may be malignant, though the visual diagnosis states "nature undetermined" pending pathology.
+
+   Q: What evidence supports each diagnosis?
+   A: 
+   Descending colon mass: Directly observed as a 1.5×1.0cm irregular, friable mass at 36cm in the descending colon
+   Multiple colonic polyps: Directly observed in the ascending colon, transverse colon, and sigmoid colon
+   Internal hemorrhoids: Directly observed in the rectum
+   
+   The endoscopic diagnosis includes "colonic malignant tumor", suggesting the mass has features strongly suggestive of malignancy.
+
+3. Classification:
+   Q: Do findings suggest benign/malignant/precancerous?
+   A: The findings strongly suggest a malignant condition. The 1.5×1.0cm irregular mass in the descending colon has worrisome features such as:
+   Larger size than the other polyps
+   Irregular shape rather than smooth contours
+   Friability (bleeds easily)
+   
+   These features are consistent with a colonic malignancy. While the small polyps elsewhere are likely benign or precancerous, the descending colon mass has concerning features suggesting malignancy.
+
+   Q: Is classification supported by findings?
+   A: Yes, the classification as malignant is well-supported by the endoscopic findings. The presence of an irregular, friable mass in the descending colon raises significant concern for malignancy, even before histopathological confirmation.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Descending colon mass",
+        "multiple colonic polyps",
+        "colonic malignant tumor"
+    ],
+    "classification": "Malignant"
+}
+
+## Example 3:
+Gender: Male
+Age: 34
+Endoscopic Findings: Esophagus: two varices beyond 30cm with red signs, sclerotherapy performed (6ml polidocanol). Stomach: mosaic pattern, antral erosions, 0.3cm ulcer. Duodenum: 0.5cm hyperplastic polyp in descending part.
+Endoscopic Diagnosis: Esophageal varices - sclerotherapy performed, portal hypertensive gastropathy, gastric ulcer, duodenal polyp.
+
+### Reasoning:
+1. Visual Finding Review:
+   Q: What endoscopic findings are observed?
+   A: The key endoscopic findings are:
+   Two esophageal varices beyond 30cm with red signs (high-risk features)
+   Mosaic pattern in the stomach
+   Antral erosions in the stomach
+   0.3cm ulcer in the stomach
+   0.5cm hyperplastic polyp in the descending duodenum
+
+   Q: What are their characteristics?
+   A: The esophageal varices have red signs, which are high-risk features for bleeding. The stomach shows a mosaic pattern, which is characteristic of portal hypertensive gastropathy. There are also erosions and a small ulcer in the antrum. The duodenal polyp is described as hyperplastic and is relatively small (0.5cm).
+
+2. Diagnostic Analysis:
+   Q: Based on endoscopic findings only, what diagnoses are suggested?
+   A: Based solely on the endoscopic findings, the suggested diagnoses are:
+   Esophageal varices
+   Portal hypertensive gastropathy
+   Gastric ulcer
+   Duodenal polyp
+
+   Q: What evidence supports each diagnosis?
+   A: 
+   Esophageal varices: Directly observed as two varices beyond 30cm with red signs
+   Portal hypertensive gastropathy: Supported by the characteristic mosaic pattern in the stomach
+   Gastric ulcer: Directly observed as a 0.3cm ulcer in the stomach
+   Duodenal polyp: Directly observed as a 0.5cm hyperplastic polyp in the descending duodenum
+
+3. Classification:
+   Q: Do findings suggest benign/malignant/precancerous?
+   A: The findings suggest a benign condition. Esophageal varices and portal hypertensive gastropathy are manifestations of portal hypertension, which is a benign condition (though potentially serious). The gastric ulcer is small (0.3cm) without features suggesting malignancy. The duodenal polyp is described as hyperplastic, which is a benign type of polyp.
+
+   Q: Is classification supported by findings?
+   A: Yes, the classification as benign is well-supported by the endoscopic findings. The varices, gastropathy, small ulcer, and hyperplastic polyp all have typical features of benign conditions with no suspicious characteristics that would suggest malignancy or precancerous changes.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Esophageal varices",
+        "portal hypertensive gastropathy",
+        "gastric ulcer",
+        "duodenal polyp"
+    ],
+    "classification": "Benign"
+}
+
+## Example 4:
+Gender: Female
+Age: 63
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Seven flat polyps seen, size ranging from 0.2cm-0.6cm, larger ones removed by snare electrocautery, smaller ones partially removed by biopsy forceps and electrocautery ablation. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly red, one shallow ulcer approximately 0.2cm, surface covered with thin white coating, surrounding mucosa congested and edematous, scattered punctate and patchy erosions also seen. Pylorus: Round, opens and closes well. Duodenum: No abnormalities in bulb and descending portion.
+Endoscopic Diagnosis: Gastric ulcer (A2), multiple gastric body polyps (electrocautery + electrocautery ablation + polypectomy), chronic non-atrophic gastritis with erosions.
+
+### Reasoning:
+1. Visual Finding Review:
+   Q: What endoscopic findings are observed?
+   A: The key endoscopic findings are:
+   Seven flat polyps in the gastric body, ranging from 0.2cm-0.6cm
+   Mottled red and white mucosa in the gastric antrum (predominantly red)
+   One shallow ulcer approximately 0.2cm in the gastric antrum with white coating
+   Congested and edematous mucosa surrounding the ulcer
+   Scattered punctate and patchy erosions in the gastric antrum
+
+   Q: What are their characteristics?
+   A: The gastric body polyps are flat and relatively small (0.2-0.6cm). The gastric antrum shows mottled red and white mucosa, suggesting inflammation. The ulcer is shallow and small (0.2cm) with a white coating, and surrounded by congested and edematous mucosa. The antral erosions are punctate and patchy, indicating superficial mucosal damage.
+
+2. Diagnostic Analysis:
+   Q: Based on endoscopic findings only, what diagnoses are suggested?
+   A: Based solely on the endoscopic findings, the suggested diagnoses are:
+   Gastric ulcer (A2)
+   Multiple gastric body polyps
+   Chronic non-atrophic gastritis with erosions
+
+   Q: What evidence supports each diagnosis?
+   A: 
+   Gastric ulcer (A2): Directly observed as a shallow 0.2cm ulcer in the gastric antrum
+   Multiple gastric body polyps: Directly observed as seven flat polyps in the gastric body
+   Chronic non-atrophic gastritis with erosions: Supported by the mottled red and white appearance of the gastric mucosa and the scattered punctate and patchy erosions in the antrum
+
+3. Classification:
+   Q: Do findings suggest benign/malignant/precancerous?
+   A: The findings suggest a benign condition. The gastric polyps are flat and small, without features suggesting malignancy. The gastric ulcer is small (0.2cm) and shallow with typical benign features. The gastric mucosa shows changes consistent with chronic gastritis, which is a benign inflammatory condition.
+
+   Q: Is classification supported by findings?
+   A: Yes, the classification as benign is well-supported by the endoscopic findings. All observed lesions have typical features of benign conditions with no suspicious characteristics that would suggest malignancy or precancerous changes.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Gastric ulcer",
+        "multiple gastric body polyps",
+        "chronic non-atrophic gastritis with erosions"
+    ],
+    "classification": "Benign"
+}
+
+## Example 5:
+Gender: Female
+Age: 48
+Endoscopic Findings: Esophagus: Scattered patchy mucosal defects >5mm in lower portion, non-confluent. Cardia: Clear Z-line, normal position with smooth mucosa. Gastric fundus: Smooth mucosa with clear minimal mucus. Gastric body: 4mm flat polyp on upper greater curvature, smooth surface, removed by biopsy forceps. Gastric angle: Normal morphology with smooth mucosa and preserved curvature. Gastric antrum: Red and white mottled mucosa, predominantly red, with scattered patchy erosions. Pylorus: Round with good function. Duodenum: Unremarkable bulb and descending portion.
+Endoscopic Diagnosis: Grade B reflux esophagitis, gastric body polyp (polypectomy performed), chronic non-atrophic gastritis with erosions.
+
+### Reasoning:
+1. Visual Finding Review:
+   Q: What endoscopic findings are observed?
+   A: The key endoscopic findings are:
+   Scattered patchy mucosal defects >5mm in the lower esophagus, non-confluent
+   4mm flat polyp on the upper greater curvature of the gastric body with smooth surface
+   Red and white mottled mucosa in the gastric antrum (predominantly red)
+   Scattered patchy erosions in the gastric antrum
+
+   Q: What are their characteristics?
+   A: The esophageal mucosal defects are patchy, scattered, and non-confluent, measuring >5mm, consistent with reflux esophagitis. The gastric body polyp is flat, small (4mm), and has a smooth surface, suggesting a benign nature. The gastric antrum shows mottled red and white mucosa with patchy erosions, consistent with gastritis.
+
+2. Diagnostic Analysis:
+   Q: Based on endoscopic findings only, what diagnoses are suggested?
+   A: Based solely on the endoscopic findings, the suggested diagnoses are:
+   Grade B reflux esophagitis
+   Gastric body polyp
+   Chronic non-atrophic gastritis with erosions
+
+   Q: What evidence supports each diagnosis?
+   A: 
+   Grade B reflux esophagitis: Supported by the scattered patchy mucosal defects >5mm in the lower esophagus
+   Gastric body polyp: Directly observed as a 4mm flat polyp on the upper greater curvature of the gastric body
+   Chronic non-atrophic gastritis with erosions: Supported by the mottled red and white appearance of the gastric antrum and the scattered patchy erosions
+
+3. Classification:
+   Q: Do findings suggest benign/malignant/precancerous?
+   A: The findings suggest a benign condition. The esophageal changes are consistent with reflux esophagitis, which is a benign inflammatory condition. The gastric polyp is small, flat, and has a smooth surface, suggesting a benign nature. The gastric mucosa shows changes consistent with chronic gastritis, which is a benign inflammatory condition.
+
+   Q: Is classification supported by findings?
+   A: Yes, the classification as benign is well-supported by the endoscopic findings. All observed lesions have typical features of benign conditions with no suspicious characteristics that would suggest malignancy or precancerous changes.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Grade B reflux esophagitis",
+        "gastric body polyp",
+        "chronic non-atrophic gastritis with erosions"
+    ],
+    "classification": "Benign"
+}
+
+Case to analyze:
+{case_data}

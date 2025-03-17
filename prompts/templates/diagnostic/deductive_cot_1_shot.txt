@@ -1,0 +1,179 @@
+# prompts/templates/diagnostic_assessment/deductive_cot_1_shot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data analyst. Let's reason deductively about diagnosis:
+
+1. Diagnostic Possibilities:
+   Q: What diagnoses could explain these findings?
+   A: List all possibilities
+   Q: What evidence would support each?
+   A: Define diagnostic criteria
+
+2. Evidence Evaluation:
+   Q: What visual findings are present?
+   A: Document actual findings
+   Q: Which diagnostic criteria are met?
+   A: Compare against standards
+   Q: What findings contradict each diagnosis?
+   A: Note contradictions
+
+3. Diagnostic Conclusion:
+   Q: Which diagnosis is best supported?
+   A: Select based on evidence
+   Q: What is the appropriate classification?
+   A: Determine category
+   Q: Is conclusion firmly supported?
+   A: Verify reasoning chain
+
+Return valid JSON following schema for diagnostic assessment.
+
+FORMAT RULES:
+1. Use exact quotes from endoscopic diagnosis section
+2. Do not include any information from histopathological findings
+3. Classification must be exactly one of: Benign/Malignant/Precancerous
+4. Every response must include both diagnoses and classification
+5. Suggested diagnoses must not be empty
+
+INPUT INFORMATION:
+- Gender
+- Age
+- Endoscopic Findings
+- Endoscopic Diagnosis ONLY
+
+REQUIRED OUTPUT FORMAT:
+{
+    "suggested_diagnoses": ["string"],  // Direct quotes from endoscopic diagnosis section
+    "classification": "Benign/Malignant/Precancerous"  // Must use exact terms
+}
+
+Note: DO NOT use histopathological findings in assessment.
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+Endoscopic Diagnosis: Duodenal bulbitis, multiple descending duodenal ulcers, chronic non-atrophic gastritis with erosions.
+
+### Reasoning:
+1. Diagnostic Possibilities:
+   Q: What diagnoses could explain these findings?
+   A: Based on the endoscopic findings, several potential diagnoses could explain what is observed:
+   
+   1. Gastritis - suggested by the mottled red and white appearance of the gastric mucosa in the body and antrum, with erosions in the antrum.
+   
+   2. Duodenal bulbitis - suggested by the mucosal congestion in the duodenal bulb.
+   
+   3. Duodenal ulcers - suggested by the multiple shallow ulcers with yellow-black coating (fibrinopurulent exudate) in the descending portion of the duodenum.
+   
+   4. Peptic ulcer disease - could explain both the gastritis and duodenal ulcerations as part of the same disease process.
+   
+   5. H. pylori infection - a common cause of both gastritis and duodenal ulcers.
+   
+   6. NSAID-induced gastropathy/ulceration - another common cause of both gastritis and duodenal ulcers.
+   
+   7. Zollinger-Ellison syndrome - a rare cause of multiple duodenal ulcers due to gastrin-producing tumor.
+   
+   8. Crohn's disease - could present with ulcerations in the duodenum, though typically would have more extensive involvement.
+   
+   9. Malignancy - could theoretically present with ulceration, though the described features are more consistent with benign disease.
+
+   Q: What evidence would support each?
+   A: Evidence supporting each potential diagnosis would include:
+   
+   For gastritis:
+   Mottled red and white appearance of the gastric mucosa
+   Presence of erosions
+   Absence of atrophy would support non-atrophic classification
+   
+   For duodenal bulbitis:
+   Mucosal congestion in the duodenal bulb without discrete ulceration
+   
+   For duodenal ulcers:
+   Direct visualization of multiple shallow ulcers with yellow-black coating in the descending portion
+   
+   For peptic ulcer disease (as unifying diagnosis):
+   Combination of gastritis and duodenal ulcers
+   
+   For specific etiologies (H. pylori, NSAIDs, etc.):
+   Would require histopathology, history, or additional testing
+   
+   For malignancy:
+   Would expect irregular ulcer borders, mass effect, or other concerning features not described here
+
+2. Evidence Evaluation:
+   Q: What visual findings are present?
+   A: The visual findings documented in the endoscopic report include:
+   
+   Mottled red and white gastric mucosa in the body (predominantly red) and antrum (predominantly white)
+   Scattered punctate and patchy erosions in the antrum
+   Mucosal congestion in the duodenal bulb
+   Multiple shallow ulcers with yellow-black coating in the descending portion of the duodenum
+   
+   The esophagus, cardia, fundus, angle, and pylorus appear normal.
+
+   Q: Which diagnostic criteria are met?
+   A: Based on the visual findings, the following diagnostic criteria are met:
+   
+   For chronic non-atrophic gastritis with erosions:
+   Mottled red and white appearance of the gastric mucosa
+   Presence of erosions in the antrum
+   No description of atrophy, supporting the non-atrophic classification
+   
+   For duodenal bulbitis:
+   Mucosal congestion in the duodenal bulb without frank ulceration
+   
+   For multiple descending duodenal ulcers:
+   Direct visualization of multiple shallow ulcers in the descending portion
+   Yellow-black coating (fibrinopurulent exudate) indicating active lesions
+   
+   These findings directly align with the stated endoscopic diagnosis.
+
+   Q: What findings contradict each diagnosis?
+   A: There are no findings in the endoscopic report that contradict the stated diagnoses of chronic non-atrophic gastritis with erosions, duodenal bulbitis, and multiple descending duodenal ulcers. All the observed changes support these diagnoses.
+   
+   For potential alternative diagnoses:
+   
+   No features suggesting malignancy are described (no mass lesions, no deep or irregular ulcers, no strictures)
+   No features suggesting Crohn's disease are described (no linear ulcers, no cobblestoning, no skip lesions)
+   Insufficient information to determine the specific etiology (H. pylori, NSAIDs, etc.)
+
+3. Diagnostic Conclusion:
+   Q: Which diagnosis is best supported?
+   A: Through deductive reasoning, I can conclude that the diagnoses best supported by the endoscopic findings are:
+   
+   1. Chronic non-atrophic gastritis with erosions
+   2. Duodenal bulbitis
+   3. Multiple descending duodenal ulcers
+   
+   These directly align with the stated endoscopic diagnosis, and all necessary diagnostic criteria are met. The visual findings provide clear and specific evidence for each of these diagnoses, with no contradictory findings.
+
+   Q: What is the appropriate classification?
+   A: The appropriate classification for this case is "Benign." All the observed findings are consistent with benign inflammatory conditions:
+   
+   The gastritis has features of a benign inflammatory process without concerning features for malignancy or precancerous changes.
+   The duodenal bulbitis represents benign inflammation.
+   The duodenal ulcers, while representing active disease, have characteristic features of benign peptic ulcers: they are shallow, multiple, and have fibrinopurulent exudate.
+   
+   There are no features described that would suggest malignancy or a precancerous condition.
+
+   Q: Is conclusion firmly supported?
+   A: Yes, the conclusion is firmly supported by the endoscopic findings:
+   
+   The diagnoses directly correlate with the visual findings documented in the endoscopic report.
+   The benign classification is strongly supported by the typical appearance of benign inflammatory conditions without any features suggesting malignancy.
+   There are no contradictory findings or alternative explanations that would better account for the observed changes.
+   
+   While histopathology would provide additional confirmation, the endoscopic appearance alone provides strong support for the diagnoses and benign classification.
+
+### Output:
+{
+    "suggested_diagnoses": [
+        "Duodenal bulbitis",
+        "multiple descending duodenal ulcers",
+        "chronic non-atrophic gastritis with erosions"
+    ],
+    "classification": "Benign"
+}
+
+Case to analyze:
+{case_data}

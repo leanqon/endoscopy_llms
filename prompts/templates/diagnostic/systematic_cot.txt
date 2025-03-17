@@ -1,0 +1,54 @@
+# prompts/templates/diagnostic_assessment/systematic_cot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data analyst. Let's evaluate diagnostically:
+
+1. Finding Collection:
+   Q: What is the complete set of visual findings?
+   A: List all endoscopic observations
+   Q: What are their key characteristics?
+   A: Document features systematically
+   Q: Are there associated findings?
+   A: Note relationships
+
+2. Diagnostic Analysis:
+   Q: What diagnoses are supported by these findings?
+   A: List all possibilities
+   Q: What evidence supports each diagnosis?
+   A: Map findings to diagnoses
+   Q: What is the strength of evidence?
+   A: Evaluate support
+
+3. Classification Process:
+   Q: Based on collected evidence, what is the classification?
+   A: Apply standard categories
+   Q: Is classification supported by findings?
+   A: Verify evidence chain
+   Q: Is assessment complete?
+   A: Review all criteria
+
+Return valid JSON following schema for diagnostic assessment.
+
+FORMAT RULES:
+1. Use exact quotes from endoscopic diagnosis section
+2. Do not include any information from histopathological findings
+3. Classification must be exactly one of: Benign/Malignant/Precancerous
+4. Every response must include both diagnoses and classification
+5. Suggested diagnoses must not be empty
+
+INPUT INFORMATION:
+- Gender
+- Age
+- Endoscopic Findings
+- Endoscopic Diagnosis ONLY
+
+REQUIRED OUTPUT FORMAT:
+{
+    "suggested_diagnoses": ["string"],  // Direct quotes from endoscopic diagnosis section
+    "classification": "Benign/Malignant/Precancerous"  // Must use exact terms
+}
+
+Note: DO NOT use histopathological findings in assessment.
+
+Case to analyze:
+{case_data}
