@@ -1,0 +1,431 @@
+# prompts/templates/entity_extraction/basic_step_cot_5_shot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data annotator. Let's analyze this endoscopic report:
+
+1. Location Identification:
+   Q: What locations are described in the report?
+   A: List only anatomical locations with findings
+   Q: Are we using standardized location terms?
+   A: Verify against approved terminology
+
+2. Finding Documentation:
+   Q: For each location, what findings are present?
+   A: List using standardized lesion types
+   Q: Are measurements provided?
+   A: Convert to numeric format
+   Q: Were interventions performed?
+   A: Document using standard terms
+
+3. Completeness Check:
+   Q: Have we captured all findings?
+   A: Review report for missed items
+   Q: Are all measurements in numeric format?
+   A: Verify data formatting
+   Q: Are all interventions documented?
+   A: Check intervention records
+
+Return valid JSON following schema for entity extraction.
+
+FORMAT RULES:
+1. Only include locations that have findings
+2. All measurements must be numbers (not strings)
+3. Use null when size/intervention is not specified
+4. Every finding must have at least one lesion
+5. Use standardized terms only
+
+REQUIRED OUTPUT FORMAT:
+{
+    "findings": [
+        {
+            "location": "string",  // Must use standardized anatomical terms
+            "lesions": [
+                {
+                    "type": "string",  // Must use standardized lesion types
+                    "size": number or {"length": number, "width": number} or null,
+                    "intervention": "string" or null  // Must use standardized intervention types
+                }
+            ]
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection, clipping
+- hemostasis, submucosal_dissection
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+
+### Reasoning:
+1. Location Identification:
+   Q: What locations are described in the report?
+   A: The report describes: esophagus, gastric cardia, gastric fundus, gastric body, gastric angle, gastric antrum, gastric pylorus, duodenal bulb, and duodenal descending portion.
+
+   Q: Are we using standardized location terms?
+   A: After verification, only gastric_antrum and duodenal_descending have findings that need to be documented.
+
+2. Finding Documentation:
+   Q: For each location, what findings are present?
+   A: In gastric_antrum: scattered erosions. In duodenal_descending: multiple ulcers.
+
+   Q: Are measurements provided?
+   A: No measurements are provided for these findings.
+
+   Q: Were interventions performed?
+   A: No interventions are described in the report.
+
+3. Completeness Check:
+   Q: Have we captured all findings?
+   A: Yes, all findings have been captured.
+
+   Q: Are all measurements in numeric format?
+   A: No measurements were provided, so they will be set to null.
+
+   Q: Are all interventions documented?
+   A: No interventions were mentioned, so they will be set to null.
+
+### Output:
+{
+    "findings": [
+        {
+            "location": "gastric_antrum",
+            "lesions": [
+                {
+                    "type": "erosion",
+                    "size": null,
+                    "intervention": null
+                }
+            ]
+        },
+        {
+            "location": "duodenal_descending",
+            "lesions": [
+                {
+                    "type": "ulcer",
+                    "size": null,
+                    "intervention": null
+                }
+            ]
+        }
+    ]
+}
+
+## Example 2:
+Gender: Male
+Age: 73
+Endoscopic Findings: Ileocecal valve: normal. Terminal ileum: normal. Ascending colon: 0.8cm sub-pedunculated polyp, EMR performed, defect clipped. Transverse colon: two 0.6-0.7cm sub-pedunculated polyps, EMR performed, defects clipped. Descending colon: 1.5×1.0cm irregular mass at 36cm, friable, thrombin spray applied. Sigmoid: multiple 0.3-0.5cm polyps removed by forceps. Rectum: normal with internal hemorrhoids.
+
+### Reasoning:
+1. Location Identification:
+   Q: What locations are described in the report?
+   A: The report describes: ileocecal valve, terminal ileum, ascending colon, transverse colon, descending colon, sigmoid colon, and rectum.
+
+   Q: Are we using standardized location terms?
+   A: After verification, ascending_colon, transverse_colon, descending_colon, and sigmoid_colon have findings requiring documentation.
+
+2. Finding Documentation:
+   Q: For each location, what findings are present?
+   A: In ascending_colon: 0.8cm polyp. In transverse_colon: two polyps (0.6-0.7cm). In descending_colon: 1.5×1.0cm mass. In sigmoid_colon: multiple polyps (0.3-0.5cm).
+
+   Q: Are measurements provided?
+   A: Yes, measurements are provided and need to be documented in numeric format.
+
+   Q: Were interventions performed?
+   A: Yes, EMR in ascending and transverse colon, and forceps removal in sigmoid.
+
+3. Completeness Check:
+   Q: Have we captured all findings?
+   A: Yes, all findings have been documented.
+
+   Q: Are all measurements in numeric format?
+   A: Yes, all measurements have been properly formatted.
+
+   Q: Are all interventions documented?
+   A: Yes, all interventions have been properly documented.
+
+### Output:
+{
+    "findings": [
+        {
+            "location": "ascending_colon",
+            "lesions": [
+                {
+                    "type": "polyp",
+                    "size": 0.8,
+                    "intervention": "emr"
+                }
+            ]
+        },
+        {
+            "location": "transverse_colon",
+            "lesions": [
+                {
+                    "type": "polyp",
+                    "size": 0.7,
+                    "intervention": "emr"
+                }
+            ]
+        },
+        {
+            "location": "descending_colon",
+            "lesions": [
+                {
+                    "type": "mass",
+                    "size": {
+                        "length": 1.5,
+                        "width": 1.0
+                    },
+                    "intervention": null
+                }
+            ]
+        },
+        {
+            "location": "sigmoid_colon",
+            "lesions": [
+                {
+                    "type": "polyp",
+                    "size": {
+                        "length": 0.3,
+                        "width": 0.5
+                    },
+                    "intervention": "biopsy_forceps"
+                }
+            ]
+        }
+    ]
+}
+
+## Example 3:
+Gender: Male
+Age: 34
+Endoscopic Findings: Esophagus: two varices beyond 30cm with red signs, sclerotherapy performed (6ml polidocanol). Stomach: mosaic pattern, antral erosions, 0.3cm ulcer. Duodenum: 0.5cm hyperplastic polyp in descending part.
+
+### Reasoning:
+1. Location Identification:
+   Q: What locations are described in the report?
+   A: The report describes: esophagus (middle portion based on 30cm distance), stomach (specifically antrum), and duodenum (descending portion).
+
+   Q: Are we using standardized location terms?
+   A: After verification, we should use esophagus_middle, gastric_antrum, and duodenal_descending.
+
+2. Finding Documentation:
+   Q: For each location, what findings are present?
+   A: In esophagus_middle: varices (best categorized as "mass"). In gastric_antrum: erosions and a 0.3cm ulcer. In duodenal_descending: 0.5cm polyp.
+
+   Q: Are measurements provided?
+   A: Yes, for the ulcer (0.3cm) and polyp (0.5cm), but not for the varices.
+
+   Q: Were interventions performed?
+   A: Yes, sclerotherapy (categorized as "injection") for the esophageal varices.
+
+3. Completeness Check:
+   Q: Have we captured all findings?
+   A: Yes, all findings have been documented.
+
+   Q: Are all measurements in numeric format?
+   A: Yes, all provided measurements are in numeric format.
+
+   Q: Are all interventions documented?
+   A: Yes, the sclerotherapy has been properly categorized as "injection".
+
+### Output:
+{
+    "findings": [
+        {
+            "location": "esophagus_middle",
+            "lesions": [
+                {
+                    "type": "mass",
+                    "size": null,
+                    "intervention": "injection"
+                }
+            ]
+        },
+        {
+            "location": "gastric_antrum",
+            "lesions": [
+                {
+                    "type": "erosion",
+                    "size": null,
+                    "intervention": null
+                },
+                {
+                    "type": "ulcer",
+                    "size": 0.3,
+                    "intervention": null
+                }
+            ]
+        },
+        {
+            "location": "duodenal_descending",
+            "lesions": [
+                {
+                    "type": "polyp",
+                    "size": 0.5,
+                    "intervention": null
+                }
+            ]
+        }
+    ]
+}
+
+## Example 4:
+Gender: Female
+Age: 63
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Seven flat polyps seen, size ranging from 0.2cm-0.6cm, larger ones removed by snare electrocautery, smaller ones partially removed by biopsy forceps and electrocautery ablation. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly red, one shallow ulcer approximately 0.2cm, surface covered with thin white coating, surrounding mucosa congested and edematous, scattered punctate and patchy erosions also seen. Pylorus: Round, opens and closes well. Duodenum: No abnormalities in bulb and descending portion.
+
+### Reasoning:
+1. Location Identification:
+   Q: What locations are described in the report?
+   A: The report describes: esophagus, gastric cardia, gastric fundus, gastric body, gastric angle, gastric antrum, gastric pylorus, and duodenum.
+
+   Q: Are we using standardized location terms?
+   A: After verification, we need to document findings in gastric_body and gastric_antrum.
+
+2. Finding Documentation:
+   Q: For each location, what findings are present?
+   A: In gastric_body: seven flat polyps (0.2-0.6cm). In gastric_antrum: one 0.2cm ulcer and scattered erosions.
+
+   Q: Are measurements provided?
+   A: Yes, polyp size range (0.2-0.6cm) and ulcer size (0.2cm).
+
+   Q: Were interventions performed?
+   A: Yes, snare electrocautery (categorized as "emr") for the larger polyps.
+
+3. Completeness Check:
+   Q: Have we captured all findings?
+   A: Yes, all findings have been documented.
+
+   Q: Are all measurements in numeric format?
+   A: Yes, polyp size range represented as length/width and ulcer size as a single value.
+
+   Q: Are all interventions documented?
+   A: Yes, the snare electrocautery has been properly categorized as "emr".
+
+### Output:
+{
+    "findings": [
+        {
+            "location": "gastric_body",
+            "lesions": [
+                {
+                    "type": "polyp",
+                    "size": {
+                        "length": 0.2,
+                        "width": 0.6
+                    },
+                    "intervention": "emr"
+                }
+            ]
+        },
+        {
+            "location": "gastric_antrum",
+            "lesions": [
+                {
+                    "type": "ulcer",
+                    "size": 0.2,
+                    "intervention": null
+                },
+                {
+                    "type": "erosion",
+                    "size": null,
+                    "intervention": null
+                }
+            ]
+        }
+    ]
+}
+
+## Example 5:
+Gender: Female
+Age: 48
+Endoscopic Findings: Esophagus: Scattered patchy mucosal defects >5mm in lower portion, non-confluent. Cardia: Clear Z-line, normal position with smooth mucosa. Gastric fundus: Smooth mucosa with clear minimal mucus. Gastric body: 4mm flat polyp on upper greater curvature, smooth surface, removed by biopsy forceps. Gastric angle: Normal morphology with smooth mucosa and preserved curvature. Gastric antrum: Red and white mottled mucosa, predominantly red, with scattered patchy erosions. Pylorus: Round with good function. Duodenum: Unremarkable bulb and descending portion.
+
+### Reasoning:
+1. Location Identification:
+   Q: What locations are described in the report?
+   A: The report describes: esophagus (lower portion), gastric cardia, gastric fundus, gastric body, gastric angle, gastric antrum, gastric pylorus, and duodenum.
+
+   Q: Are we using standardized location terms?
+   A: After verification, we need to document findings in esophagus_lower, gastric_body, and gastric_antrum.
+
+2. Finding Documentation:
+   Q: For each location, what findings are present?
+   A: In esophagus_lower: scattered mucosal defects (>5mm). In gastric_body: 4mm polyp. In gastric_antrum: scattered erosions.
+
+   Q: Are measurements provided?
+   A: Yes, mucosal defects (>5mm, which is 0.5cm) and polyp (4mm, which is 0.4cm).
+
+   Q: Were interventions performed?
+   A: Yes, the polyp was removed by biopsy forceps.
+
+3. Completeness Check:
+   Q: Have we captured all findings?
+   A: Yes, all findings have been documented.
+
+   Q: Are all measurements in numeric format?
+   A: Yes, all measurements have been converted to numeric format in cm.
+
+   Q: Are all interventions documented?
+   A: Yes, the biopsy forceps removal has been properly documented.
+
+### Output:
+{
+    "findings": [
+        {
+            "location": "esophagus_lower",
+            "lesions": [
+                {
+                    "type": "mucosal_defect",
+                    "size": 0.5,
+                    "intervention": null
+                }
+            ]
+        },
+        {
+            "location": "gastric_body",
+            "lesions": [
+                {
+                    "type": "polyp",
+                    "size": 0.4,
+                    "intervention": "biopsy_forceps"
+                }
+            ]
+        },
+        {
+            "location": "gastric_antrum",
+            "lesions": [
+                {
+                    "type": "erosion",
+                    "size": null,
+                    "intervention": null
+                }
+            ]
+        }
+    ]
+}
+
+Case to analyze:
+{case_data}

@@ -1,0 +1,77 @@
+# prompts/templates/entity_extraction/deductive_cot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data analyst. Let's reason deductively:
+
+1. Initial Hypothesis:
+   Q: What findings might be present in this report?
+   A: List possible findings
+   Q: What locations should we examine?
+   A: Identify potential sites
+
+2. Evidence Examination:
+   Q: What actual findings are documented?
+   A: Compare against hypotheses
+   Q: What measurements are provided?
+   A: Collect numerical evidence
+   Q: What interventions were performed?
+   A: Document confirmed actions
+
+3. Conclusion Formation:
+   Q: What findings are definitively present?
+   A: List confirmed findings
+   Q: Are measurements verified?
+   A: Confirm numerical data
+   Q: Are interventions confirmed?
+   A: Verify procedures
+
+Return valid JSON following schema for entity extraction.
+
+FORMAT RULES:
+1. Only include locations that have findings
+2. All measurements must be numbers (not strings)
+3. Use null when size/intervention is not specified
+4. Every finding must have at least one lesion
+5. Use standardized terms only
+
+REQUIRED OUTPUT FORMAT:
+{
+    "findings": [
+        {
+            "location": "string",  // Must use standardized anatomical terms
+            "lesions": [
+                {
+                    "type": "string",  // Must use standardized lesion types
+                    "size": number or {"length": number, "width": number} or null,
+                    "intervention": "string" or null  // Must use standardized intervention types
+                }
+            ]
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection, clipping
+- hemostasis, submucosal_dissection
+
+Case to analyze:
+{case_data}

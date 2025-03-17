@@ -1,0 +1,431 @@
+# prompts/templates/entity_extraction/deductive_cot_5_shot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data analyst. Let's reason deductively:
+
+1. Initial Hypothesis:
+   Q: What findings might be present in this report?
+   A: List possible findings
+   Q: What locations should we examine?
+   A: Identify potential sites
+
+2. Evidence Examination:
+   Q: What actual findings are documented?
+   A: Compare against hypotheses
+   Q: What measurements are provided?
+   A: Collect numerical evidence
+   Q: What interventions were performed?
+   A: Document confirmed actions
+
+3. Conclusion Formation:
+   Q: What findings are definitively present?
+   A: List confirmed findings
+   Q: Are measurements verified?
+   A: Confirm numerical data
+   Q: Are interventions confirmed?
+   A: Verify procedures
+
+Return valid JSON following schema for entity extraction.
+
+FORMAT RULES:
+1. Only include locations that have findings
+2. All measurements must be numbers (not strings)
+3. Use null when size/intervention is not specified
+4. Every finding must have at least one lesion
+5. Use standardized terms only
+
+REQUIRED OUTPUT FORMAT:
+{
+    "findings": [
+        {
+            "location": "string",  // Must use standardized anatomical terms
+            "lesions": [
+                {
+                    "type": "string",  // Must use standardized lesion types
+                    "size": number or {"length": number, "width": number} or null,
+                    "intervention": "string" or null  // Must use standardized intervention types
+                }
+            ]
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection, clipping
+- hemostasis, submucosal_dissection
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+
+### Reasoning:
+1. Initial Hypothesis:
+   Q: What findings might be present in this report?
+   A: Based on the endoscopic diagnosis, I would expect to find evidence of gastritis with erosions and duodenal ulcers.
+
+   Q: What locations should we examine?
+   A: I should examine the entire stomach (particularly the antrum) and duodenum.
+
+2. Evidence Examination:
+   Q: What actual findings are documented?
+   A: The evidence shows scattered erosions in the gastric antrum and multiple shallow ulcers in the duodenal descending portion.
+
+   Q: What measurements are provided?
+   A: No specific measurements are provided for any lesions.
+
+   Q: What interventions were performed?
+   A: No interventions are mentioned in the report.
+
+3. Conclusion Formation:
+   Q: What findings are definitively present?
+   A: Based on the evidence, there are erosions in the gastric antrum and ulcers in the duodenal descending portion.
+
+   Q: Are measurements verified?
+   A: No measurements were provided, so size fields will be null.
+
+   Q: Are interventions confirmed?
+   A: No interventions were mentioned, so intervention fields will be null.
+
+### Output:
+{
+    "findings": [
+        {
+            "location": "gastric_antrum",
+            "lesions": [
+                {
+                    "type": "erosion",
+                    "size": null,
+                    "intervention": null
+                }
+            ]
+        },
+        {
+            "location": "duodenal_descending",
+            "lesions": [
+                {
+                    "type": "ulcer",
+                    "size": null,
+                    "intervention": null
+                }
+            ]
+        }
+    ]
+}
+
+## Example 2:
+Gender: Male
+Age: 73
+Endoscopic Findings: Ileocecal valve: normal. Terminal ileum: normal. Ascending colon: 0.8cm sub-pedunculated polyp, EMR performed, defect clipped. Transverse colon: two 0.6-0.7cm sub-pedunculated polyps, EMR performed, defects clipped. Descending colon: 1.5×1.0cm irregular mass at 36cm, friable, thrombin spray applied. Sigmoid: multiple 0.3-0.5cm polyps removed by forceps. Rectum: normal with internal hemorrhoids.
+
+### Reasoning:
+1. Initial Hypothesis:
+   Q: What findings might be present in this report?
+   A: Based on the report title, I would expect to find evidence of colonic polyps or masses.
+
+   Q: What locations should we examine?
+   A: I should examine the entire colon from terminal ileum to rectum.
+
+2. Evidence Examination:
+   Q: What actual findings are documented?
+   A: The evidence shows polyps in the ascending colon, transverse colon, and sigmoid colon, and a mass in the descending colon.
+
+   Q: What measurements are provided?
+   A: Measurements are provided for all lesions: 0.8cm polyp (ascending), 0.6-0.7cm polyps (transverse), 1.5×1.0cm mass (descending), and 0.3-0.5cm polyps (sigmoid).
+
+   Q: What interventions were performed?
+   A: EMR was performed for polyps in ascending and transverse colon, and forceps removal for sigmoid polyps.
+
+3. Conclusion Formation:
+   Q: What findings are definitively present?
+   A: Based on the evidence, there are polyps in the ascending colon, transverse colon, and sigmoid colon, and a mass in the descending colon.
+
+   Q: Are measurements verified?
+   A: Yes, measurements are provided for all lesions and need to be formatted appropriately.
+
+   Q: Are interventions confirmed?
+   A: Yes, EMR and forceps removal are confirmed interventions that map to standardized terms.
+
+### Output:
+{
+    "findings": [
+        {
+            "location": "ascending_colon",
+            "lesions": [
+                {
+                    "type": "polyp",
+                    "size": 0.8,
+                    "intervention": "emr"
+                }
+            ]
+        },
+        {
+            "location": "transverse_colon",
+            "lesions": [
+                {
+                    "type": "polyp",
+                    "size": 0.7,
+                    "intervention": "emr"
+                }
+            ]
+        },
+        {
+            "location": "descending_colon",
+            "lesions": [
+                {
+                    "type": "mass",
+                    "size": {
+                        "length": 1.5,
+                        "width": 1.0
+                    },
+                    "intervention": null
+                }
+            ]
+        },
+        {
+            "location": "sigmoid_colon",
+            "lesions": [
+                {
+                    "type": "polyp",
+                    "size": {
+                        "length": 0.3,
+                        "width": 0.5
+                    },
+                    "intervention": "biopsy_forceps"
+                }
+            ]
+        }
+    ]
+}
+
+## Example 3:
+Gender: Male
+Age: 34
+Endoscopic Findings: Esophagus: two varices beyond 30cm with red signs, sclerotherapy performed (6ml polidocanol). Stomach: mosaic pattern, antral erosions, 0.3cm ulcer. Duodenum: 0.5cm hyperplastic polyp in descending part.
+
+### Reasoning:
+1. Initial Hypothesis:
+   Q: What findings might be present in this report?
+   A: Based on the patient's age and the mention of varices, I might expect to find evidence of portal hypertension, possibly with associated lesions in the upper GI tract.
+
+   Q: What locations should we examine?
+   A: I should examine the esophagus, stomach, and duodenum.
+
+2. Evidence Examination:
+   Q: What actual findings are documented?
+   A: The evidence shows two varices in the esophagus (beyond 30cm, which corresponds to middle esophagus), erosions and a 0.3cm ulcer in the gastric antrum, and a 0.5cm polyp in the duodenal descending portion.
+
+   Q: What measurements are provided?
+   A: Measurements are provided for the ulcer (0.3cm) and polyp (0.5cm), but not for the varices.
+
+   Q: What interventions were performed?
+   A: Sclerotherapy was performed for the esophageal varices.
+
+3. Conclusion Formation:
+   Q: What findings are definitively present?
+   A: Based on the evidence, there are varices in the middle esophagus, erosions and an ulcer in the gastric antrum, and a polyp in the duodenal descending portion.
+
+   Q: Are measurements verified?
+   A: Measurements are verified for the ulcer and polyp, but not provided for the varices.
+
+   Q: Are interventions confirmed?
+   A: Sclerotherapy for the esophageal varices is confirmed and maps to "injection" in our standardized terms.
+
+### Output:
+{
+    "findings": [
+        {
+            "location": "esophagus_middle",
+            "lesions": [
+                {
+                    "type": "mass",
+                    "size": null,
+                    "intervention": "injection"
+                }
+            ]
+        },
+        {
+            "location": "gastric_antrum",
+            "lesions": [
+                {
+                    "type": "erosion",
+                    "size": null,
+                    "intervention": null
+                },
+                {
+                    "type": "ulcer",
+                    "size": 0.3,
+                    "intervention": null
+                }
+            ]
+        },
+        {
+            "location": "duodenal_descending",
+            "lesions": [
+                {
+                    "type": "polyp",
+                    "size": 0.5,
+                    "intervention": null
+                }
+            ]
+        }
+    ]
+}
+
+## Example 4:
+Gender: Female
+Age: 63
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Seven flat polyps seen, size ranging from 0.2cm-0.6cm, larger ones removed by snare electrocautery, smaller ones partially removed by biopsy forceps and electrocautery ablation. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly red, one shallow ulcer approximately 0.2cm, surface covered with thin white coating, surrounding mucosa congested and edematous, scattered punctate and patchy erosions also seen. Pylorus: Round, opens and closes well. Duodenum: No abnormalities in bulb and descending portion.
+
+### Reasoning:
+1. Initial Hypothesis:
+   Q: What findings might be present in this report?
+   A: Based on the patient's age, I might expect to find evidence of gastritis, possibly with polyps or other lesions.
+
+   Q: What locations should we examine?
+   A: I should examine the entire upper GI tract, with special attention to the stomach.
+
+2. Evidence Examination:
+   Q: What actual findings are documented?
+   A: The evidence shows seven flat polyps in the gastric body (0.2-0.6cm), one shallow ulcer (0.2cm) in the gastric antrum, and scattered erosions also in the gastric antrum.
+
+   Q: What measurements are provided?
+   A: Measurements are provided for the gastric body polyps (0.2-0.6cm) and the antral ulcer (0.2cm).
+
+   Q: What interventions were performed?
+   A: Larger polyps were removed by snare electrocautery (EMR).
+
+3. Conclusion Formation:
+   Q: What findings are definitively present?
+   A: Based on the evidence, there are polyps in the gastric body, and an ulcer and erosions in the gastric antrum.
+
+   Q: Are measurements verified?
+   A: Yes, measurements are verified for the polyps and ulcer.
+
+   Q: Are interventions confirmed?
+   A: Yes, snare electrocautery for the polyps is confirmed and maps to "emr" in our standardized terms.
+
+### Output:
+{
+    "findings": [
+        {
+            "location": "gastric_body",
+            "lesions": [
+                {
+                    "type": "polyp",
+                    "size": {
+                        "length": 0.2,
+                        "width": 0.6
+                    },
+                    "intervention": "emr"
+                }
+            ]
+        },
+        {
+            "location": "gastric_antrum",
+            "lesions": [
+                {
+                    "type": "ulcer",
+                    "size": 0.2,
+                    "intervention": null
+                },
+                {
+                    "type": "erosion",
+                    "size": null,
+                    "intervention": null
+                }
+            ]
+        }
+    ]
+}
+
+## Example 5:
+Gender: Female
+Age: 48
+Endoscopic Findings: Esophagus: Scattered patchy mucosal defects >5mm in lower portion, non-confluent. Cardia: Clear Z-line, normal position with smooth mucosa. Gastric fundus: Smooth mucosa with clear minimal mucus. Gastric body: 4mm flat polyp on upper greater curvature, smooth surface, removed by biopsy forceps. Gastric angle: Normal morphology with smooth mucosa and preserved curvature. Gastric antrum: Red and white mottled mucosa, predominantly red, with scattered patchy erosions. Pylorus: Round with good function. Duodenum: Unremarkable bulb and descending portion.
+
+### Reasoning:
+1. Initial Hypothesis:
+   Q: What findings might be present in this report?
+   A: Based on the patient's age, I might expect to find evidence of reflux disease, possibly with associated lesions in the upper GI tract.
+
+   Q: What locations should we examine?
+   A: I should examine the entire upper GI tract, with special attention to the esophagus and stomach.
+
+2. Evidence Examination:
+   Q: What actual findings are documented?
+   A: The evidence shows scattered mucosal defects in the lower esophagus (>5mm), a 4mm flat polyp in the gastric body, and scattered erosions in the gastric antrum.
+
+   Q: What measurements are provided?
+   A: Measurements are provided for the esophageal mucosal defects (>5mm, which is 0.5cm) and the gastric polyp (4mm, which is 0.4cm).
+
+   Q: What interventions were performed?
+   A: The gastric body polyp was removed by biopsy forceps.
+
+3. Conclusion Formation:
+   Q: What findings are definitively present?
+   A: Based on the evidence, there are mucosal defects in the lower esophagus, a polyp in the gastric body, and erosions in the gastric antrum.
+
+   Q: Are measurements verified?
+   A: Yes, measurements are verified for the mucosal defects and polyp.
+
+   Q: Are interventions confirmed?
+   A: Yes, biopsy forceps removal for the gastric polyp is confirmed.
+
+### Output:
+{
+    "findings": [
+        {
+            "location": "esophagus_lower",
+            "lesions": [
+                {
+                    "type": "mucosal_defect",
+                    "size": 0.5,
+                    "intervention": null
+                }
+            ]
+        },
+        {
+            "location": "gastric_body",
+            "lesions": [
+                {
+                    "type": "polyp",
+                    "size": 0.4,
+                    "intervention": "biopsy_forceps"
+                }
+            ]
+        },
+        {
+            "location": "gastric_antrum",
+            "lesions": [
+                {
+                    "type": "erosion",
+                    "size": null,
+                    "intervention": null
+                }
+            ]
+        }
+    ]
+}
+
+Case to analyze:
+{case_data}

@@ -1,0 +1,89 @@
+# prompts/templates/entity_extraction/direct_1_shot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data annotator. Extract findings from this endoscopic report. Follow the format rules exactly and use only standardized terms.
+
+Return valid JSON following schema for entity extraction.
+
+FORMAT RULES:
+1. Only include locations that have findings
+2. All measurements must be numbers (not strings)
+3. Use null when size/intervention is not specified
+4. Every finding must have at least one lesion
+5. Use standardized terms only
+
+REQUIRED OUTPUT FORMAT:
+{
+    "findings": [
+        {
+            "location": "string",  // Must use standardized anatomical terms
+            "lesions": [
+                {
+                    "type": "string",  // Must use standardized lesion types
+                    "size": number or {"length": number, "width": number} or null,
+                    "intervention": "string" or null  // Must use standardized intervention types
+                }
+            ]
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection, clipping
+- hemostasis, submucosal_dissection
+
+Here is an example of how to extract information from an endoscopic report:
+
+Example:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+Endoscopic Diagnosis: Duodenal bulbitis, multiple descending duodenal ulcers, chronic non-atrophic gastritis with erosions.
+
+Output:
+{
+    "findings": [
+        {
+            "location": "gastric_antrum",
+            "lesions": [
+                {
+                    "type": "erosion",
+                    "size": null,
+                    "intervention": null
+                }
+            ]
+        },
+        {
+            "location": "duodenal_descending",
+            "lesions": [
+                {
+                    "type": "ulcer",
+                    "size": null,
+                    "intervention": null
+                }
+            ]
+        }
+    ]
+}
+
+Based on the example above, please extract findings from this case:
+{case_data}

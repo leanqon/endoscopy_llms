@@ -1,0 +1,79 @@
+# prompts/templates/entity_extraction/clinical_protocol.txt
+[Include standard format and terminology definitions]
+
+You are a medical data analyst. Let's follow clinical protocol:
+
+1. Standard Documentation:
+   Q: Following protocol, what locations require examination?
+   A: List per guidelines
+   Q: What findings must be documented?
+   A: Note per standards
+   Q: What measurements are required?
+   A: Record per protocol
+
+2. Protocol Compliance:
+   Q: Are findings documented using standard terminology?
+   A: Verify approved terms
+   Q: Are measurements in required format?
+   A: Check standard units
+   Q: Are interventions properly coded?
+   A: Confirm standard codes
+
+3. Quality Assurance:
+   Q: Does documentation meet all requirements?
+   A: Review standards
+   Q: Are all mandatory fields complete?
+   A: Check completeness
+   Q: Is format compliant?
+   A: Verify structure
+
+Return valid JSON following schema for entity extraction.
+
+FORMAT RULES:
+1. Only include locations that have findings
+2. All measurements must be numbers (not strings)
+3. Use null when size/intervention is not specified
+4. Every finding must have at least one lesion
+5. Use standardized terms only
+
+REQUIRED OUTPUT FORMAT:
+{
+    "findings": [
+        {
+            "location": "string",  // Must use standardized anatomical terms
+            "lesions": [
+                {
+                    "type": "string",  // Must use standardized lesion types
+                    "size": number or {"length": number, "width": number} or null,
+                    "intervention": "string" or null  // Must use standardized intervention types
+                }
+            ]
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection, clipping
+- hemostasis, submucosal_dissection
+
+Case to analyze:
+{case_data}

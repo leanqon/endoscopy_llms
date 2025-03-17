@@ -1,0 +1,136 @@
+# prompts/templates/entity_extraction/basic_step_cot_1_shot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data annotator. Let's analyze this endoscopic report:
+
+1. Location Identification:
+   Q: What locations are described in the report?
+   A: List only anatomical locations with findings
+   Q: Are we using standardized location terms?
+   A: Verify against approved terminology
+
+2. Finding Documentation:
+   Q: For each location, what findings are present?
+   A: List using standardized lesion types
+   Q: Are measurements provided?
+   A: Convert to numeric format
+   Q: Were interventions performed?
+   A: Document using standard terms
+
+3. Completeness Check:
+   Q: Have we captured all findings?
+   A: Review report for missed items
+   Q: Are all measurements in numeric format?
+   A: Verify data formatting
+   Q: Are all interventions documented?
+   A: Check intervention records
+
+Return valid JSON following schema for entity extraction.
+
+FORMAT RULES:
+1. Only include locations that have findings
+2. All measurements must be numbers (not strings)
+3. Use null when size/intervention is not specified
+4. Every finding must have at least one lesion
+5. Use standardized terms only
+
+REQUIRED OUTPUT FORMAT:
+{
+    "findings": [
+        {
+            "location": "string",  // Must use standardized anatomical terms
+            "lesions": [
+                {
+                    "type": "string",  // Must use standardized lesion types
+                    "size": number or {"length": number, "width": number} or null,
+                    "intervention": "string" or null  // Must use standardized intervention types
+                }
+            ]
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection, clipping
+- hemostasis, submucosal_dissection
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+
+### Reasoning:
+1. Location Identification:
+   Q: What locations are described in the report?
+   A: The report describes: esophagus, gastric cardia, gastric fundus, gastric body, gastric angle, gastric antrum, gastric pylorus, duodenal bulb, and duodenal descending portion.
+
+   Q: Are we using standardized location terms?
+   A: After verification, only gastric_antrum and duodenal_descending have findings that need to be documented.
+
+2. Finding Documentation:
+   Q: For each location, what findings are present?
+   A: In gastric_antrum: scattered erosions. In duodenal_descending: multiple ulcers.
+
+   Q: Are measurements provided?
+   A: No measurements are provided for these findings.
+
+   Q: Were interventions performed?
+   A: No interventions are described in the report.
+
+3. Completeness Check:
+   Q: Have we captured all findings?
+   A: Yes, all findings have been captured.
+
+   Q: Are all measurements in numeric format?
+   A: No measurements were provided, so they will be set to null.
+
+   Q: Are all interventions documented?
+   A: No interventions were mentioned, so they will be set to null.
+
+### Output:
+{
+    "findings": [
+        {
+            "location": "gastric_antrum",
+            "lesions": [
+                {
+                    "type": "erosion",
+                    "size": null,
+                    "intervention": null
+                }
+            ]
+        },
+        {
+            "location": "duodenal_descending",
+            "lesions": [
+                {
+                    "type": "ulcer",
+                    "size": null,
+                    "intervention": null
+                }
+            ]
+        }
+    ]
+}
+
+Case to analyze:
+{case_data}
