@@ -1,0 +1,74 @@
+# prompts/templates/pattern_recognition/systematic_cot.txt
+You are a medical data analyst. Let's analyze patterns systematically:
+
+1. Pattern Data Collection:
+   Q: What is the complete set of findings to analyze?
+   A: List all findings systematically
+   Q: Where is each finding located?
+   A: Map to anatomical locations
+   Q: What relationships exist between locations?
+   A: Document spatial connections
+
+2. Distribution Analysis:
+   Q: How are findings distributed across locations?
+   A: Analyze spatial patterns
+   Q: What type of distribution is present?
+   A: Evaluate using standard categories
+   Q: Are there multiple distribution patterns?
+   A: Document all patterns
+
+3. Pattern Verification:
+   Q: Is pattern classification complete?
+   A: Check all findings
+   Q: Does classification match standard definitions?
+   A: Verify against criteria
+   Q: Are all relationships documented?
+   A: Review connections
+
+Return valid JSON following format rules exactly.
+
+FORMAT RULES:
+1. At least one pattern must be documented
+2. Use only standardized lesion types for finding_type
+3. All locations must use standardized terms
+4. Distribution must be one of: continuous, scattered, localized, diffuse
+5. Multiple locations required for continuous/scattered/diffuse patterns
+6. Single location only for localized pattern
+
+REQUIRED OUTPUT FORMAT:
+{
+    "patterns": [
+        {
+            "finding_type": "string",  // Must use standardized lesion types
+            "locations": ["string"],   // Must use standardized anatomical terms
+            "distribution": "continuous/scattered/localized/diffuse"
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass, elevation
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection
+- clipping, hemostasis
+- submucosal_dissection
+
+Case to analyze:
+{case_data}

@@ -1,0 +1,549 @@
+# prompts/templates/pattern_recognition/clinical_protocol_5_shot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data analyst. Let's follow clinical protocol:
+
+1. Standard Pattern Assessment:
+   Q: Following protocol, how should distribution be evaluated?
+   A: Apply standard methodology
+   Q: What pattern classifications are recognized?
+   A: Review approved categories
+   Q: How should extent be documented?
+   A: Follow measurement standards
+
+2. Protocol-Based Analysis:
+   Q: Does the distribution match defined patterns?
+   A: Compare to standards
+   Q: Is the extent properly quantified?
+   A: Verify measurements
+   Q: Are relationships documented per protocol?
+   A: Check spatial mapping
+
+3. Standardized Documentation:
+   Q: Is pattern classification properly recorded?
+   A: Verify format
+   Q: Are all required elements present?
+   A: Review requirements
+   Q: Does documentation meet guidelines?
+   A: Confirm compliance
+
+Return valid JSON following format rules exactly.
+
+FORMAT RULES:
+1. At least one pattern must be documented
+2. Use only standardized lesion types for finding_type
+3. All locations must use standardized terms
+4. Distribution must be one of: continuous, scattered, localized, diffuse
+5. Multiple locations required for continuous/scattered/diffuse patterns
+6. Single location only for localized pattern
+
+REQUIRED OUTPUT FORMAT:
+{
+    "patterns": [
+        {
+            "finding_type": "string",  // Must use standardized lesion types
+            "locations": ["string"],   // Must use standardized anatomical terms
+            "distribution": "continuous/scattered/localized/diffuse"
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass, elevation
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection
+- clipping, hemostasis
+- submucosal_dissection
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+
+### Reasoning:
+1. Standard Pattern Assessment:
+   Q: Following protocol, how should distribution be evaluated?
+   A: According to standard endoscopic documentation protocols, the distribution of lesions should be evaluated by:
+   1. Identifying the anatomical location(s) where each type of finding is present
+   2. Determining whether lesions are single or multiple within each location
+   3. Assessing whether lesions span across adjacent anatomical regions or are confined to specific locations
+   4. Categorizing the distribution pattern according to standardized definitions (continuous, scattered, localized, diffuse)
+
+   In this case, I must evaluate the distribution of erosions in the gastric antrum and ulcers in the duodenal descending portion.
+
+   Q: What pattern classifications are recognized?
+   A: The standard pattern classifications in endoscopic documentation are:
+   - Continuous: Findings span adjacent anatomical locations without interruption
+   - Scattered: Multiple discrete findings distributed within one location or across non-adjacent locations
+   - Localized: Single location involvement with one or more findings
+   - Diffuse: Widespread involvement across multiple locations
+
+   Q: How should extent be documented?
+   A: The extent should be documented by specifying:
+   1. The precise anatomical location(s) using standardized terminology
+   2. The distribution pattern for each finding type
+   3. Any relevant qualifiers (e.g., "multiple," "scattered," "patchy") that appear in the report
+
+2. Protocol-Based Analysis:
+   Q: Does the distribution match defined patterns?
+   A: Analyzing each finding type:
+   - Erosions in gastric antrum: The report describes "scattered punctate and patchy erosions in antrum." This indicates multiple discrete lesions within a single anatomical location, which matches the definition of a "scattered" distribution pattern.
+   - Ulcers in duodenal descending portion: The report describes "multiple shallow ulcers." This indicates multiple discrete lesions within a single anatomical location, which matches the definition of a "scattered" distribution pattern.
+
+   Neither finding extends beyond its anatomical region to adjacent areas, so they do not qualify as "continuous" or "diffuse." Both findings involve multiple lesions within a single location, so they are best classified as "scattered" rather than "localized."
+
+   Q: Is the extent properly quantified?
+   A: The extent is qualitatively described but not precisely quantified:
+   - For the erosions, terms like "scattered" and "patchy" indicate multiple lesions but do not specify an exact number.
+   - For the ulcers, the term "multiple" indicates more than one but does not specify an exact number.
+
+   While precise quantification would be ideal, these qualitative descriptors are acceptable according to standard documentation protocols when exact counts are not provided.
+
+   Q: Are relationships documented per protocol?
+   A: The spatial relationships are appropriately documented:
+   - The erosions are explicitly confined to the gastric antrum.
+   - The ulcers are explicitly confined to the duodenal descending portion.
+   - There is no described continuity between these findings, and they occur in non-adjacent anatomical regions.
+
+   This level of documentation meets standard protocol requirements for describing the spatial distribution of findings.
+
+3. Standardized Documentation:
+   Q: Is pattern classification properly recorded?
+   A: Based on the analysis, the appropriate pattern classifications are:
+   - Erosions in gastric antrum: "scattered" distribution
+   - Ulcers in duodenal descending portion: "scattered" distribution
+
+   This classification follows standard protocol and accurately reflects the description in the endoscopic report.
+
+   Q: Are all required elements present?
+   A: The required elements for standardized documentation are:
+   - Finding type (using standardized terminology): "erosion" and "ulcer"
+   - Anatomical location(s) (using standardized terminology): "gastric_antrum" and "duodenal_descending"
+   - Distribution pattern (using standardized classification): "scattered" for both
+
+   All these elements are present and can be properly formatted according to the required JSON structure.
+
+   Q: Does documentation meet guidelines?
+   A: Yes, the documentation meets standard guidelines for endoscopic reporting. The findings are described with appropriate anatomical precision, standard terminology is used, and the distribution patterns can be accurately classified based on the information provided.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "ulcer",
+            "locations": ["duodenal_descending"],
+            "distribution": "scattered"
+        }
+    ]
+}
+
+## Example 2:
+Gender: Male
+Age: 73
+Endoscopic Findings: Ileocecal valve: normal. Terminal ileum: normal. Ascending colon: 0.8cm sub-pedunculated polyp, EMR performed, defect clipped. Transverse colon: two 0.6-0.7cm sub-pedunculated polyps, EMR performed, defects clipped. Descending colon: 1.5×1.0cm irregular mass at 36cm, friable, thrombin spray applied. Sigmoid: multiple 0.3-0.5cm polyps removed by forceps. Rectum: normal with internal hemorrhoids.
+
+### Reasoning:
+1. Standard Pattern Assessment:
+   Q: Following protocol, how should distribution be evaluated?
+   A: According to standard colonoscopy documentation protocols, the distribution of lesions should be evaluated by:
+   1. Identifying the anatomical location(s) where each type of finding is present
+   2. Determining whether lesions are single or multiple within each location
+   3. Assessing whether lesions span across adjacent anatomical regions or are scattered across non-adjacent regions
+   4. Categorizing the distribution pattern according to standardized definitions
+
+   In this case, I must evaluate the distribution of polyps found in the ascending colon, transverse colon, and sigmoid colon, as well as the mass in the descending colon.
+
+   Q: What pattern classifications are recognized?
+   A: The standard pattern classifications in colonoscopy documentation are:
+   - Continuous: Findings span adjacent anatomical locations without interruption
+   - Scattered: Multiple discrete findings distributed across non-adjacent locations
+   - Localized: Single location involvement with one or more findings
+   - Diffuse: Widespread involvement across multiple locations
+
+   Q: How should extent be documented?
+   A: The extent should be documented by specifying:
+   1. The precise anatomical location(s) using standardized terminology
+   2. The distribution pattern for each finding type
+   3. Size measurements where available
+   4. The number of lesions when specified
+
+2. Protocol-Based Analysis:
+   Q: Does the distribution match defined patterns?
+   A: Analyzing each finding type:
+   - Polyps: Found in three non-adjacent segments of the colon (ascending_colon, transverse_colon, and sigmoid_colon). This matches the definition of a "scattered" distribution pattern.
+   - Mass: Found only in the descending colon. This is a single lesion in a single location, matching the definition of a "localized" distribution pattern.
+
+   The polyps are not continuous across adjacent segments (the descending colon separates the transverse colon from the sigmoid colon, and has a different type of lesion). The mass is limited to a single segment.
+
+   Q: Is the extent properly quantified?
+   A: The extent is well quantified in the report:
+   - Ascending colon: One 0.8cm polyp
+   - Transverse colon: Two 0.6-0.7cm polyps
+   - Descending colon: One 1.5×1.0cm mass
+   - Sigmoid colon: Multiple 0.3-0.5cm polyps (exact number not specified)
+
+   All findings have size measurements, and except for the sigmoid polyps, the exact number is specified. This level of quantification meets standard documentation requirements.
+
+   Q: Are relationships documented per protocol?
+   A: The spatial relationships are appropriately documented:
+   - Each finding is precisely localized to specific colonic segments.
+   - There is no suggestion of continuous involvement across segments.
+   - The distribution of polyps across non-adjacent segments is clearly documented.
+
+   This level of documentation meets standard protocol requirements for describing the spatial distribution of findings.
+
+3. Standardized Documentation:
+   Q: Is pattern classification properly recorded?
+   A: Based on the analysis, the appropriate pattern classifications are:
+   - Polyps across ascending, transverse, and sigmoid colon: "scattered" distribution
+   - Mass in descending colon: "localized" distribution
+
+   This classification follows standard protocol and accurately reflects the description in the colonoscopy report.
+
+   Q: Are all required elements present?
+   A: The required elements for standardized documentation are:
+   - Finding type (using standardized terminology): "polyp" and "mass"
+   - Anatomical location(s) (using standardized terminology): "ascending_colon", "transverse_colon", "sigmoid_colon" for polyps; "descending_colon" for mass
+   - Distribution pattern (using standardized classification): "scattered" for polyps, "localized" for mass
+
+   All these elements are present and can be properly formatted according to the required JSON structure.
+
+   Q: Does documentation meet guidelines?
+   A: Yes, the documentation meets standard guidelines for colonoscopy reporting. The findings are described with appropriate anatomical precision, standard terminology is used, and the distribution patterns can be accurately classified based on the information provided.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "polyp",
+            "locations": ["ascending_colon", "transverse_colon", "sigmoid_colon"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "mass",
+            "locations": ["descending_colon"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+## Example 3:
+Gender: Male
+Age: 34
+Endoscopic Findings: Esophagus: two varices beyond 30cm with red signs, sclerotherapy performed (6ml polidocanol). Stomach: mosaic pattern, antral erosions, 0.3cm ulcer. Duodenum: 0.5cm hyperplastic polyp in descending part.
+
+### Reasoning:
+1. Standard Pattern Assessment:
+   Q: Following protocol, how should distribution be evaluated?
+   A: According to standard upper endoscopy documentation protocols, the distribution of lesions should be evaluated by:
+   1. Identifying the anatomical location(s) where each type of finding is present
+   2. Determining whether lesions are single or multiple within each location
+   3. Assessing whether lesions span across adjacent anatomical regions or are confined to specific locations
+   4. Categorizing the distribution pattern according to standardized definitions
+
+   In this case, I must evaluate the distribution of varices in the esophagus, erosions and ulcer in the stomach, and polyp in the duodenum.
+
+   Q: What pattern classifications are recognized?
+   A: The standard pattern classifications in upper endoscopy documentation are:
+   - Continuous: Findings span adjacent anatomical locations without interruption
+   - Scattered: Multiple discrete findings within one location or across non-adjacent locations
+   - Localized: Single location involvement with one finding
+   - Diffuse: Widespread involvement across multiple locations
+
+   Q: How should extent be documented?
+   A: The extent should be documented by specifying:
+   1. The precise anatomical location(s) using standardized terminology
+   2. The distribution pattern for each finding type
+   3. Size measurements where available
+   4. The number of lesions when specified
+
+2. Protocol-Based Analysis:
+   Q: Does the distribution match defined patterns?
+   A: Analyzing each finding type:
+   - Esophageal varices: The report describes "two varices beyond 30cm" (which corresponds to the middle esophagus). This indicates multiple discrete vascular lesions within a single location, matching the definition of a "scattered" distribution pattern. These should be classified as "mass" according to our standardized terms.
+   - Gastric erosions: The report mentions "antral erosions" (plural), indicating multiple erosions within the gastric antrum. This matches the definition of a "scattered" distribution pattern.
+   - Gastric ulcer: The report mentions a single "0.3cm ulcer" in the stomach (presumably in the antrum given the context). This matches the definition of a "localized" distribution pattern.
+   - Duodenal polyp: The report mentions a single "0.5cm hyperplastic polyp in descending part" of the duodenum. This matches the definition of a "localized" distribution pattern.
+
+   None of these findings span across adjacent anatomical regions, so they do not qualify as "continuous" or "diffuse."
+
+   Q: Is the extent properly quantified?
+   A: The extent is partially quantified in the report:
+   - Esophageal varices: Specified as "two"
+   - Gastric erosions: Number not specified, only described as plural "erosions"
+   - Gastric ulcer: Specified as one with size 0.3cm
+   - Duodenal polyp: Specified as one with size 0.5cm
+
+   While the number of erosions is not specified, the remaining findings are adequately quantified according to standard documentation requirements.
+
+   Q: Are relationships documented per protocol?
+   A: The spatial relationships are appropriately documented:
+   - Each finding is localized to specific anatomical regions.
+   - There is no described continuity between findings in different regions.
+   - The precise location within the esophagus is indicated by distance measurement.
+
+   This level of documentation meets standard protocol requirements for describing the spatial distribution of findings.
+
+3. Standardized Documentation:
+   Q: Is pattern classification properly recorded?
+   A: Based on the analysis, the appropriate pattern classifications are:
+   - Esophageal varices (classified as "mass"): "scattered" distribution in esophagus_middle
+   - Gastric erosions: "scattered" distribution in gastric_antrum
+   - Gastric ulcer: "localized" distribution in gastric_antrum
+   - Duodenal polyp: "localized" distribution in duodenal_descending
+
+   This classification follows standard protocol and accurately reflects the description in the endoscopic report.
+
+   Q: Are all required elements present?
+   A: The required elements for standardized documentation are:
+   - Finding type (using standardized terminology): "mass", "erosion", "ulcer", "polyp"
+   - Anatomical location(s) (using standardized terminology): "esophagus_middle", "gastric_antrum", "duodenal_descending"
+   - Distribution pattern (using standardized classification): "scattered" or "localized" as appropriate
+
+   All these elements are present and can be properly formatted according to the required JSON structure.
+
+   Q: Does documentation meet guidelines?
+   A: Yes, the documentation meets standard guidelines for upper endoscopy reporting. The findings are described with appropriate anatomical precision, standard terminology is used, and the distribution patterns can be accurately classified based on the information provided.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "mass",
+            "locations": ["esophagus_middle"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "ulcer",
+            "locations": ["gastric_antrum"],
+            "distribution": "localized"
+        },
+        {
+            "finding_type": "polyp",
+            "locations": ["duodenal_descending"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+## Example 4:
+Gender: Female
+Age: 63
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Seven flat polyps seen, size ranging from 0.2cm-0.6cm, larger ones removed by snare electrocautery, smaller ones partially removed by biopsy forceps and electrocautery ablation. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly red, one shallow ulcer approximately 0.2cm, surface covered with thin white coating, surrounding mucosa congested and edematous, scattered punctate and patchy erosions also seen. Pylorus: Round, opens and closes well. Duodenum: No abnormalities in bulb and descending portion.
+
+### Reasoning:
+1. Standard Pattern Assessment:
+   Q: Following protocol, how should distribution be evaluated?
+   A: According to standard upper endoscopy documentation protocols, the distribution of lesions should be evaluated by:
+   1. Identifying the anatomical location(s) where each type of finding is present
+   2. Determining whether lesions are single or multiple within each location
+   3. Assessing whether lesions span across adjacent anatomical regions or are confined to specific locations
+   4. Categorizing the distribution pattern according to standardized definitions
+
+   In this case, I must evaluate the distribution of polyps in the gastric body, ulcer in the gastric antrum, and erosions in the gastric antrum.
+
+   Q: What pattern classifications are recognized?
+   A: The standard pattern classifications in upper endoscopy documentation are:
+   - Continuous: Findings span adjacent anatomical locations without interruption
+   - Scattered: Multiple discrete findings within one location or across non-adjacent locations
+   - Localized: Single location involvement with one finding
+   - Diffuse: Widespread involvement across multiple locations
+
+   Q: How should extent be documented?
+   A: The extent should be documented by specifying:
+   1. The precise anatomical location(s) using standardized terminology
+   2. The distribution pattern for each finding type
+   3. Size measurements where available
+   4. The number of lesions when specified
+
+2. Protocol-Based Analysis:
+   Q: Does the distribution match defined patterns?
+   A: Analyzing each finding type:
+   - Gastric body polyps: The report specifies "seven flat polyps" with sizes ranging from 0.2cm-0.6cm. This indicates multiple discrete lesions within a single location, matching the definition of a "scattered" distribution pattern.
+   - Gastric antrum ulcer: The report specifies "one shallow ulcer approximately 0.2cm." This indicates a single lesion within a single location, matching the definition of a "localized" distribution pattern.
+   - Gastric antrum erosions: The report describes "scattered punctate and patchy erosions." This indicates multiple discrete lesions within a single location, matching the definition of a "scattered" distribution pattern.
+
+   None of these findings span across adjacent anatomical regions, so they do not qualify as "continuous" or "diffuse."
+
+   Q: Is the extent properly quantified?
+   A: The extent is well quantified in the report:
+   - Gastric body polyps: Specified as "seven" with a size range of 0.2cm-0.6cm
+   - Gastric antrum ulcer: Specified as "one" with size approximately 0.2cm
+   - Gastric antrum erosions: Number not specified, but described as "scattered punctate and patchy"
+
+   While the exact number of erosions is not specified, this level of quantification meets standard documentation requirements.
+
+   Q: Are relationships documented per protocol?
+   A: The spatial relationships are appropriately documented:
+   - Each finding is precisely localized to specific gastric regions (body or antrum).
+   - There is no suggestion of continuous involvement across regions.
+   - The morphology of lesions is well described.
+
+   This level of documentation meets standard protocol requirements for describing the spatial distribution of findings.
+
+3. Standardized Documentation:
+   Q: Is pattern classification properly recorded?
+   A: Based on the analysis, the appropriate pattern classifications are:
+   - Gastric body polyps: "scattered" distribution
+   - Gastric antrum ulcer: "localized" distribution
+   - Gastric antrum erosions: "scattered" distribution
+
+   This classification follows standard protocol and accurately reflects the description in the endoscopic report.
+
+   Q: Are all required elements present?
+   A: The required elements for standardized documentation are:
+   - Finding type (using standardized terminology): "polyp", "ulcer", "erosion"
+   - Anatomical location(s) (using standardized terminology): "gastric_body", "gastric_antrum"
+   - Distribution pattern (using standardized classification): "scattered" or "localized" as appropriate
+
+   All these elements are present and can be properly formatted according to the required JSON structure.
+
+   Q: Does documentation meet guidelines?
+   A: Yes, the documentation meets standard guidelines for upper endoscopy reporting. The findings are described with appropriate anatomical precision, standard terminology is used, and the distribution patterns can be accurately classified based on the information provided.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "polyp",
+            "locations": ["gastric_body"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "ulcer",
+            "locations": ["gastric_antrum"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+## Example 5:
+Gender: Female
+Age: 48
+Endoscopic Findings: Esophagus: Scattered patchy mucosal defects >5mm in lower portion, non-confluent. Cardia: Clear Z-line, normal position with smooth mucosa. Gastric fundus: Smooth mucosa with clear minimal mucus. Gastric body: 4mm flat polyp on upper greater curvature, smooth surface, removed by biopsy forceps. Gastric angle: Normal morphology with smooth mucosa and preserved curvature. Gastric antrum: Red and white mottled mucosa, predominantly red, with scattered patchy erosions. Pylorus: Round with good function. Duodenum: Unremarkable bulb and descending portion.
+
+### Reasoning:
+1. Standard Pattern Assessment:
+   Q: Following protocol, how should distribution be evaluated?
+   A: According to standard upper endoscopy documentation protocols, the distribution of lesions should be evaluated by:
+   1. Identifying the anatomical location(s) where each type of finding is present
+   2. Determining whether lesions are single or multiple within each location
+   3. Assessing whether lesions span across adjacent anatomical regions or are confined to specific locations
+   4. Categorizing the distribution pattern according to standardized definitions
+
+   In this case, I must evaluate the distribution of mucosal defects in the lower esophagus, polyp in the gastric body, and erosions in the gastric antrum.
+
+   Q: What pattern classifications are recognized?
+   A: The standard pattern classifications in upper endoscopy documentation are:
+   - Continuous: Findings span adjacent anatomical locations without interruption
+   - Scattered: Multiple discrete findings within one location or across non-adjacent locations
+   - Localized: Single location involvement with one finding
+   - Diffuse: Widespread involvement across multiple locations
+
+   Q: How should extent be documented?
+   A: The extent should be documented by specifying:
+   1. The precise anatomical location(s) using standardized terminology
+   2. The distribution pattern for each finding type
+   3. Size measurements where available
+   4. The number of lesions when specified
+
+2. Protocol-Based Analysis:
+   Q: Does the distribution match defined patterns?
+   A: Analyzing each finding type:
+   - Esophageal mucosal defects: The report describes "scattered patchy mucosal defects >5mm in lower portion, non-confluent." This indicates multiple discrete lesions within a single location, explicitly described as non-confluent, matching the definition of a "scattered" distribution pattern.
+   - Gastric body polyp: The report specifies "4mm flat polyp on upper greater curvature." This indicates a single lesion at a specific site within a single location, matching the definition of a "localized" distribution pattern.
+   - Gastric antrum erosions: The report describes "scattered patchy erosions." This indicates multiple discrete lesions within a single location, matching the definition of a "scattered" distribution pattern.
+
+   None of these findings span across adjacent anatomical regions, so they do not qualify as "continuous" or "diffuse."
+
+   Q: Is the extent properly quantified?
+   A: The extent is partially quantified in the report:
+   - Esophageal mucosal defects: Size specified as ">5mm", but number not specified
+   - Gastric body polyp: Specified as one with size 4mm and precise location
+   - Gastric antrum erosions: Number not specified, only described as "scattered patchy"
+
+   While the exact number of mucosal defects and erosions is not specified, the qualitative description and size information meet standard documentation requirements.
+
+   Q: Are relationships documented per protocol?
+   A: The spatial relationships are appropriately documented:
+   - Each finding is precisely localized to specific anatomical regions.
+   - There is no suggestion of continuous involvement across regions.
+   - The esophageal lesions are explicitly described as "non-confluent."
+
+   This level of documentation meets standard protocol requirements for describing the spatial distribution of findings.
+
+3. Standardized Documentation:
+   Q: Is pattern classification properly recorded?
+   A: Based on the analysis, the appropriate pattern classifications are:
+   - Esophageal mucosal defects: "scattered" distribution in esophagus_lower
+   - Gastric body polyp: "localized" distribution in gastric_body
+   - Gastric antrum erosions: "scattered" distribution in gastric_antrum
+
+   This classification follows standard protocol and accurately reflects the description in the endoscopic report.
+
+   Q: Are all required elements present?
+   A: The required elements for standardized documentation are:
+   - Finding type (using standardized terminology): "mucosal_defect", "polyp", "erosion"
+   - Anatomical location(s) (using standardized terminology): "esophagus_lower", "gastric_body", "gastric_antrum"
+   - Distribution pattern (using standardized classification): "scattered" or "localized" as appropriate
+
+   All these elements are present and can be properly formatted according to the required JSON structure.
+
+   Q: Does documentation meet guidelines?
+   A: Yes, the documentation meets standard guidelines for upper endoscopy reporting. The findings are described with appropriate anatomical precision, standard terminology is used, and the distribution patterns can be accurately classified based on the information provided.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "mucosal_defect",
+            "locations": ["esophagus_lower"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "polyp",
+            "locations": ["gastric_body"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+Case to analyze:
+{case_data}

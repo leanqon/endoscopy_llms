@@ -1,0 +1,248 @@
+# prompts/templates/pattern_recognition/deductive_cot_2_shot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data analyst. Let's reason deductively about distribution patterns:
+
+1. Pattern Possibilities:
+   Q: What distribution patterns could exist in this case?
+   A: List all possible patterns
+   Q: What evidence would support each pattern?
+   A: Define criteria for each
+
+2. Evidence Analysis:
+   Q: What is the actual distribution of findings?
+   A: Map documented locations
+   Q: How do findings relate spatially?
+   A: Analyze relationships
+   Q: Which pattern criteria are met?
+   A: Compare against definitions
+
+3. Pattern Determination:
+   Q: Which pattern is definitively present?
+   A: Select based on evidence
+   Q: Are there alternative explanations?
+   A: Rule out other patterns
+   Q: Is the conclusion supported?
+   A: Verify evidence chain
+
+Return valid JSON following format rules exactly.
+
+FORMAT RULES:
+1. At least one pattern must be documented
+2. Use only standardized lesion types for finding_type
+3. All locations must use standardized terms
+4. Distribution must be one of: continuous, scattered, localized, diffuse
+5. Multiple locations required for continuous/scattered/diffuse patterns
+6. Single location only for localized pattern
+
+REQUIRED OUTPUT FORMAT:
+{
+    "patterns": [
+        {
+            "finding_type": "string",  // Must use standardized lesion types
+            "locations": ["string"],   // Must use standardized anatomical terms
+            "distribution": "continuous/scattered/localized/diffuse"
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass, elevation
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection
+- clipping, hemostasis
+- submucosal_dissection
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+
+### Reasoning:
+1. Pattern Possibilities:
+   Q: What distribution patterns could exist in this case?
+   A: Based on the endoscopic findings description, several possible distribution patterns could theoretically exist:
+   
+   - Continuous pattern: If lesions span adjacent anatomical locations without interruption
+   - Scattered pattern: If multiple discrete lesions are present within one location or across non-adjacent locations
+   - Localized pattern: If a single location has a single lesion
+   - Diffuse pattern: If widespread involvement spans multiple locations
+   
+   I need to determine which of these patterns actually applies to the findings described.
+
+   Q: What evidence would support each pattern?
+   A: Evidence supporting each potential pattern would be:
+   
+   - Continuous: Description of lesions extending across adjacent anatomical regions without interruption
+   - Scattered: Description of multiple discrete lesions confined to one region or similar lesions in non-adjacent regions
+   - Localized: Description of a single lesion in a single location
+   - Diffuse: Description of widespread involvement across multiple regions
+
+2. Evidence Analysis:
+   Q: What is the actual distribution of findings?
+   A: Analyzing the report methodically:
+   
+   - Erosions are described as "scattered punctate and patchy" and are explicitly located in the "antrum"
+   - Ulcers are described as "multiple shallow" and are explicitly located in the "duodenal descending portion"
+   
+   The erosions are confined to the gastric antrum and do not extend to adjacent regions. The ulcers are confined to the duodenal descending portion and do not extend to adjacent regions.
+
+   Q: How do findings relate spatially?
+   A: The erosions and ulcers are in separate, non-adjacent anatomical locations (gastric antrum and duodenal descending portion). There are no lesions described in the intervening regions (gastric pylorus, duodenal bulb). The two types of lesions (erosions and ulcers) are therefore spatially distinct and not part of a continuous process.
+
+   Q: Which pattern criteria are met?
+   A: Based on the evidence:
+   
+   - For the gastric antrum erosions: They are described as "scattered" and "patchy," indicating multiple discrete lesions confined to the antrum. This meets the criteria for a "scattered" distribution pattern within a single location.
+   - For the duodenal descending portion ulcers: They are described as "multiple," indicating several discrete lesions confined to the descending duodenum. This meets the criteria for a "scattered" distribution pattern within a single location.
+   
+   Neither finding meets criteria for "continuous" (no extension across adjacent regions), "diffuse" (no widespread involvement), or "localized" (not single lesions).
+
+3. Pattern Determination:
+   Q: Which pattern is definitively present?
+   A: Through deductive reasoning, I can conclude:
+   
+   1. The gastric antrum erosions exhibit a "scattered" distribution pattern, with multiple discrete lesions confined to this single location.
+   2. The duodenal descending portion ulcers exhibit a "scattered" distribution pattern, with multiple discrete lesions confined to this single location.
+
+   Q: Are there alternative explanations?
+   A: The only plausible alternative would be to consider these as "localized" patterns. However, this is ruled out because:
+   
+   - "Localized" requires a single lesion in a single location
+   - Both the erosions and ulcers are described as multiple ("scattered," "patchy," "multiple")
+   
+   Therefore, "scattered" is the only pattern classification that fits the evidence.
+
+   Q: Is the conclusion supported?
+   A: Yes, the conclusion is firmly supported by the evidence in the report:
+   
+   - Explicit description of "scattered" erosions in the antrum
+   - Explicit description of "multiple" ulcers in the duodenal descending portion
+   - No description of continuity between regions
+   - No description of widespread involvement across multiple regions
+   
+   This supports the classification of both findings as having a "scattered" distribution pattern.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "ulcer",
+            "locations": ["duodenal_descending"],
+            "distribution": "scattered"
+        }
+    ]
+}
+
+## Example 2:
+Gender: Male
+Age: 73
+Endoscopic Findings: Ileocecal valve: normal. Terminal ileum: normal. Ascending colon: 0.8cm sub-pedunculated polyp, EMR performed, defect clipped. Transverse colon: two 0.6-0.7cm sub-pedunculated polyps, EMR performed, defects clipped. Descending colon: 1.5×1.0cm irregular mass at 36cm, friable, thrombin spray applied. Sigmoid: multiple 0.3-0.5cm polyps removed by forceps. Rectum: normal with internal hemorrhoids.
+
+### Reasoning:
+1. Pattern Possibilities:
+   Q: What distribution patterns could exist in this case?
+   A: Based on the endoscopic findings description, several possible distribution patterns could theoretically exist:
+   
+   - Continuous pattern: If lesions span adjacent anatomical locations without interruption
+   - Scattered pattern: If multiple discrete lesions are present across non-adjacent locations
+   - Localized pattern: If a single location has a single lesion
+   - Diffuse pattern: If widespread involvement spans multiple locations
+   
+   I need to determine which of these patterns actually applies to the findings described.
+
+   Q: What evidence would support each pattern?
+   A: Evidence supporting each potential pattern would be:
+   
+   - Continuous: Description of similar lesions extending across adjacent colonic segments without interruption
+   - Scattered: Description of similar lesions appearing in multiple non-adjacent segments
+   - Localized: Description of a single lesion in a single segment
+   - Diffuse: Description of widespread involvement across multiple segments
+
+2. Evidence Analysis:
+   Q: What is the actual distribution of findings?
+   A: Analyzing the report methodically:
+   
+   - Polyps are found in three non-adjacent segments: ascending colon (one 0.8cm polyp), transverse colon (two 0.6-0.7cm polyps), and sigmoid colon (multiple 0.3-0.5cm polyps)
+   - A mass is found in a single segment: descending colon (one 1.5×1.0cm irregular mass)
+   
+   The polyps are not confined to a single segment, nor do they form a continuous pattern across adjacent segments. The mass is confined to a single segment.
+
+   Q: How do findings relate spatially?
+   A: The polyps are found in the ascending colon, transverse colon, and sigmoid colon, which are not all adjacent to each other. Specifically, the descending colon (which contains a mass, not polyps) separates the transverse colon from the sigmoid colon. This distribution of polyps across non-adjacent segments indicates a scattered pattern rather than a continuous one.
+   
+   The mass is confined to the descending colon and does not extend to adjacent segments, indicating a localized pattern.
+
+   Q: Which pattern criteria are met?
+   A: Based on the evidence:
+   
+   - For the polyps: They are found in multiple non-adjacent segments (ascending, transverse, sigmoid). This meets the criteria for a "scattered" distribution pattern.
+   - For the mass: It is a single lesion confined to a single segment (descending colon). This meets the criteria for a "localized" distribution pattern.
+   
+   Neither finding meets criteria for "continuous" (no extension across adjacent segments without interruption) or "diffuse" (no truly widespread involvement).
+
+3. Pattern Determination:
+   Q: Which pattern is definitively present?
+   A: Through deductive reasoning, I can conclude:
+   
+   1. The polyps exhibit a "scattered" distribution pattern, with similar lesions appearing in multiple non-adjacent segments (ascending, transverse, sigmoid).
+   2. The mass exhibits a "localized" distribution pattern, with a single lesion confined to a single segment (descending).
+
+   Q: Are there alternative explanations?
+   A: The only plausible alternative would be to consider the polyps as having a "diffuse" pattern. However, this is ruled out because:
+   
+   - "Diffuse" implies more widespread involvement
+   - The polyps are present in only three of five colonic segments
+   - The rectum and descending colon do not contain polyps
+   
+   Therefore, "scattered" is the most accurate classification for the polyp distribution.
+
+   Q: Is the conclusion supported?
+   A: Yes, the conclusion is firmly supported by the evidence in the report:
+   
+   - Polyps are explicitly described in three non-adjacent segments
+   - The mass is explicitly described as a single lesion in the descending colon
+   - There is no description of continuity between segments
+   
+   This supports the classification of polyps as having a "scattered" distribution and the mass as having a "localized" distribution.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "polyp",
+            "locations": ["ascending_colon", "transverse_colon", "sigmoid_colon"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "mass",
+            "locations": ["descending_colon"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+Case to analyze:
+{case_data}

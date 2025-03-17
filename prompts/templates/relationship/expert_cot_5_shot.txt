@@ -1,0 +1,309 @@
+# prompts/templates/pattern_recognition/expert_cot_5_shot.txt
+You are an experienced endoscopist. Let's analyze the distribution patterns:
+
+1. Clinical Pattern Assessment:
+   Q: From my clinical perspective, how are the lesions distributed?
+   A: Evaluate spatial relationships
+   Q: What is the extent of mucosal involvement?
+   A: Assess distribution patterns
+
+2. Professional Interpretation:
+   Q: Based on my experience, what pattern do these findings represent?
+   A: Classify using standard categories
+   Q: How do the findings relate anatomically?
+   A: Analyze relationships between locations
+
+3. Clinical Documentation:
+   Q: Have I captured the pattern according to medical standards?
+   A: Verify classification
+   Q: Is the distribution properly characterized?
+   A: Confirm pattern documentation
+
+Return valid JSON following format rules exactly.
+
+FORMAT RULES:
+1. At least one pattern must be documented
+2. Use only standardized lesion types for finding_type
+3. All locations must use standardized terms
+4. Distribution must be one of: continuous, scattered, localized, diffuse
+5. Multiple locations required for continuous/scattered/diffuse patterns
+6. Single location only for localized pattern
+
+REQUIRED OUTPUT FORMAT:
+{
+    "patterns": [
+        {
+            "finding_type": "string",  // Must use standardized lesion types
+            "locations": ["string"],   // Must use standardized anatomical terms
+            "distribution": "continuous/scattered/localized/diffuse"
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass, elevation
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection
+- clipping, hemostasis
+- submucosal_dissection
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+
+### Reasoning:
+1. Clinical Pattern Assessment:
+   Q: From my clinical perspective, how are the lesions distributed?
+   A: As an experienced endoscopist, I note two distinct lesion patterns in this case. First, in the gastric antrum, I observe multiple scattered erosions described as "punctate and patchy," indicating discrete, separate lesions spread throughout this region but confined to it. These erosions appear against a background of mottled mucosa, which is characteristic of chronic gastritis. 
+   
+   Second, in the duodenal descending portion, I observe multiple shallow ulcers with yellow-black coating (fibrinous exudate). These ulcers, while multiple, are confined to the descending duodenum and do not extend to the duodenal bulb, which shows only congestion without discrete lesions.
+
+   Q: What is the extent of mucosal involvement?
+   A: The mucosal involvement is limited to specific regions. In the gastric antrum, the erosions appear scattered throughout this anatomical region but do not extend to adjacent segments such as the gastric angle or pylorus. Similarly, the duodenal involvement with ulcers is confined to the descending portion and does not involve the bulb. This indicates multiple discrete lesions within defined anatomical boundaries rather than a continuous or diffuse process.
+
+2. Professional Interpretation:
+   Q: Based on my experience, what pattern do these findings represent?
+   A: Based on my clinical experience, the erosions in the gastric antrum represent a "scattered" distribution pattern, which is characterized by multiple discrete lesions limited to one anatomical location rather than a continuous or diffuse inflammatory process. Similarly, the multiple ulcers in the duodenal descending portion also represent a "scattered" pattern within that single location.
+
+   Q: How do the findings relate anatomically?
+   A: Anatomically, these findings are distinctly separated. The antral erosions and duodenal ulcers occur in non-adjacent areas separated by the gastric pylorus and duodenal bulb, which appear normal. This suggests two separate pathological processes rather than a continuous disease process extending from stomach to duodenum.
+
+3. Clinical Documentation:
+   Q: Have I captured the pattern according to medical standards?
+   A: Yes, classifying both the antral erosions and duodenal ulcers as "scattered" within their respective locations follows standard endoscopic classification systems for distribution patterns. The pattern clearly distinguishes these findings from continuous, diffuse, or localized patterns.
+
+   Q: Is the distribution properly characterized?
+   A: Yes, the characterization as "scattered" accurately reflects the endoscopic description of multiple discrete lesions confined to specific anatomical regions. This classification provides clinically relevant information about the nature and extent of the disease process, which is important for guiding further management.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "ulcer",
+            "locations": ["duodenal_descending"],
+            "distribution": "scattered"
+        }
+    ]
+}
+
+## Example 2:
+Gender: Male
+Age: 73
+Endoscopic Findings: Ileocecal valve: normal. Terminal ileum: normal. Ascending colon: 0.8cm sub-pedunculated polyp, EMR performed, defect clipped. Transverse colon: two 0.6-0.7cm sub-pedunculated polyps, EMR performed, defects clipped. Descending colon: 1.5×1.0cm irregular mass at 36cm, friable, thrombin spray applied. Sigmoid: multiple 0.3-0.5cm polyps removed by forceps. Rectum: normal with internal hemorrhoids.
+
+### Reasoning:
+1. Clinical Pattern Assessment:
+   Q: From my clinical perspective, how are the lesions distributed?
+   A: As an experienced endoscopist, I observe multiple polyps distributed across various segments of the colon – specifically in the ascending colon (one polyp), transverse colon (two polyps), and sigmoid colon (multiple polyps). These polyps are not contiguous but rather appear as separate discrete lesions in non-adjacent colonic segments. Additionally, I note a solitary mass in the descending colon with concerning features (irregular, friable) that is distinct from the polyp pattern seen elsewhere.
+
+   Q: What is the extent of mucosal involvement?
+   A: The polyps involve multiple non-adjacent segments of the colon, suggesting a scattered pattern throughout the large intestine rather than a continuous or diffuse involvement. The ascending, transverse, and sigmoid colon all contain polyps, while the descending colon contains a distinct mass lesion. The terminal ileum, ileocecal valve, and rectum are spared, showing normal mucosa (apart from incidental internal hemorrhoids in the rectum).
+
+2. Professional Interpretation:
+   Q: Based on my experience, what pattern do these findings represent?
+   A: Based on my clinical experience, the polyps found in the ascending, transverse, and sigmoid colon represent a classic "scattered" distribution pattern, which is commonly seen in conditions such as sporadic adenomatous polyps or serrated polyp syndrome. The mass in the descending colon represents a "localized" pattern as it is a single lesion confined to one anatomical segment, which raises concerns for a focal neoplastic process.
+
+   Q: How do the findings relate anatomically?
+   A: Anatomically, the polyps are distributed in a non-continuous pattern with involvement of the ascending, transverse, and sigmoid colon, while sparing the descending colon, which instead harbors a distinct mass lesion. The rectum and terminal ileum are normal. This scattered polyp distribution suggests a field effect affecting the colonic mucosa rather than a contiguous disease process.
+
+3. Clinical Documentation:
+   Q: Have I captured the pattern according to medical standards?
+   A: Yes, the classification of the polyp distribution as "scattered" across multiple colonic segments and the mass as "localized" to the descending colon follows standard endoscopic documentation conventions and provides clinically meaningful information.
+
+   Q: Is the distribution properly characterized?
+   A: Yes, the characterization accurately reflects the endoscopic findings. Documenting the polyps as having a scattered distribution across three non-adjacent colonic segments appropriately conveys the pattern of disease, which has implications for surveillance recommendations and risk stratification. Similarly, documenting the mass as localized to the descending colon appropriately highlights this as a distinct finding requiring specific attention.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "polyp",
+            "locations": ["ascending_colon", "transverse_colon", "sigmoid_colon"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "mass",
+            "locations": ["descending_colon"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+## Example 3:
+Gender: Male
+Age: 34
+Endoscopic Findings: Esophagus: two varices beyond 30cm with red signs, sclerotherapy performed (6ml polidocanol). Stomach: mosaic pattern, antral erosions, 0.3cm ulcer. Duodenum: 0.5cm hyperplastic polyp in descending part.
+
+### Reasoning:
+1. Clinical Pattern Assessment:
+   Q: From my clinical perspective, how are the lesions distributed?
+   A: As an experienced endoscopist, I observe several distinct lesion patterns in this case. In the mid-esophagus (beyond 30cm from the incisors), I note two varices with red signs, which represent discrete vascular protrusions that I would classify as masses based on our standardized terminology. In the gastric antrum, I observe erosions which appear to be multiple based on the plural form used in the report, as well as a single discrete ulcer measuring 0.3cm. In the duodenal descending portion, I observe a solitary 0.5cm hyperplastic polyp.
+
+   Q: What is the extent of mucosal involvement?
+   A: The mucosal involvement is heterogeneous across the upper GI tract. The esophageal varices appear as two discrete vascular lesions in the mid-esophagus. The gastric findings include multiple erosions in the antrum along with a single ulcer, both confined to the antral region. The duodenal finding is a solitary polyp in the descending portion only. Each of these represents distinct pathological processes affecting specific regions without continuous extension between areas.
+
+2. Professional Interpretation:
+   Q: Based on my experience, what pattern do these findings represent?
+   A: Based on my clinical expertise, the two esophageal varices represent a "scattered" pattern within the mid-esophagus. The gastric erosions represent a "scattered" pattern within the antrum, while the single gastric ulcer represents a "localized" pattern within the same region. The solitary duodenal polyp represents a "localized" pattern in the descending duodenum.
+
+   The overall picture suggests portal hypertension (causing the varices and mosaic pattern in the stomach) with separate erosive/ulcerative pathology in the gastric antrum, and an incidental polyp in the duodenum.
+
+   Q: How do the findings relate anatomically?
+   A: Anatomically, these findings represent distinct processes in separate regions of the upper GI tract. The esophageal varices are in the mid-esophagus, the erosions and ulcer are confined to the gastric antrum, and the polyp is isolated to the descending duodenum. There is no continuous involvement between these regions, indicating separate pathological processes rather than a single disease process affecting the entire upper GI tract.
+
+3. Clinical Documentation:
+   Q: Have I captured the pattern according to medical standards?
+   A: Yes, my classification of the distribution patterns follows standard endoscopic terminology. The varices as "scattered" in the mid-esophagus, the erosions as "scattered" in the gastric antrum, the ulcer as "localized" in the gastric antrum, and the polyp as "localized" in the descending duodenum accurately reflects their distribution according to medical standards.
+
+   Q: Is the distribution properly characterized?
+   A: Yes, the characterization provides clinically meaningful information about the extent and pattern of disease. The scattered distribution of varices indicates multiple discrete vascular lesions rather than a confluent variceal pattern. The scattered erosions with a single ulcer in the antrum suggests a focally severe gastritis. The localized polyp in the duodenum is appropriately characterized as an isolated finding.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "mass",
+            "locations": ["esophagus_middle"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "ulcer",
+            "locations": ["gastric_antrum"],
+            "distribution": "localized"
+        },
+        {
+            "finding_type": "polyp",
+            "locations": ["duodenal_descending"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+## Example 4:
+Gender: Female
+Age: 63
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Seven flat polyps seen, size ranging from 0.2cm-0.6cm, larger ones removed by snare electrocautery, smaller ones partially removed by biopsy forceps and electrocautery ablation. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly red, one shallow ulcer approximately 0.2cm, surface covered with thin white coating, surrounding mucosa congested and edematous, scattered punctate and patchy erosions also seen. Pylorus: Round, opens and closes well. Duodenum: No abnormalities in bulb and descending portion.
+
+### Reasoning:
+1. Clinical Pattern Assessment:
+   Q: From my clinical perspective, how are the lesions distributed?
+   A: As an experienced endoscopist, I observe three distinct lesion patterns in this case. In the gastric body, I note seven flat polyps ranging from 0.2-0.6cm in size, which represent multiple discrete lesions scattered throughout this region. In the gastric antrum, I observe a single shallow ulcer measuring 0.2cm with a white coating and surrounding mucosal changes. Also in the antrum, I note scattered punctate and patchy erosions distributed throughout this region but confined to it.
+
+   Q: What is the extent of mucosal involvement?
+   A: The mucosal involvement is limited to the gastric body and antrum, with sparing of the esophagus, gastric cardia, fundus, angle, pylorus, and duodenum. Within the gastric body, the multiple polyps are distributed throughout this anatomical region. Within the antrum, the erosions appear scattered throughout, while the ulcer is a focal finding. This represents a pattern of regionalized involvement rather than diffuse or continuous disease.
+
+2. Professional Interpretation:
+   Q: Based on my experience, what pattern do these findings represent?
+   A: Based on my clinical expertise, the seven polyps in the gastric body represent a "scattered" distribution pattern within this region, as they are multiple discrete lesions throughout a single anatomical location. The erosions in the gastric antrum also represent a "scattered" pattern within that region. The single ulcer in the gastric antrum represents a "localized" pattern, as it is a solitary lesion within that region.
+
+   The overall picture suggests fundic gland polyps in the gastric body (common in this age group) with a separate antral gastritis with erosions and a focal ulcer, possibly related to H. pylori infection or NSAID use.
+
+   Q: How do the findings relate anatomically?
+   A: Anatomically, the findings show a clear demarcation between the gastric body (with polyps) and the gastric antrum (with erosions and an ulcer). The involvement does not extend beyond these regions, with normal findings in the adjacent areas (fundus, angle, pylorus). This suggests distinct pathological processes affecting specific regions of the stomach rather than a diffuse gastritis.
+
+3. Clinical Documentation:
+   Q: Have I captured the pattern according to medical standards?
+   A: Yes, my classification of the polyps as having a "scattered" distribution in the gastric body, the erosions as having a "scattered" distribution in the gastric antrum, and the ulcer as having a "localized" distribution in the gastric antrum follows standard endoscopic terminology and accurately reflects the distribution patterns observed.
+
+   Q: Is the distribution properly characterized?
+   A: Yes, the characterization provides clinically relevant information about the extent and pattern of disease. The scattered distribution of polyps throughout the gastric body suggests a field effect in this region, while the scattered erosions with a localized ulcer in the antrum suggests a regional inflammatory process of variable severity.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "polyp",
+            "locations": ["gastric_body"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "ulcer",
+            "locations": ["gastric_antrum"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+## Example 5:
+Gender: Female
+Age: 48
+Endoscopic Findings: Esophagus: Scattered patchy mucosal defects >5mm in lower portion, non-confluent. Cardia: Clear Z-line, normal position with smooth mucosa. Gastric fundus: Smooth mucosa with clear minimal mucus. Gastric body: 4mm flat polyp on upper greater curvature, smooth surface, removed by biopsy forceps. Gastric angle: Normal morphology with smooth mucosa and preserved curvature. Gastric antrum: Red and white mottled mucosa, predominantly red, with scattered patchy erosions. Pylorus: Round with good function. Duodenum: Unremarkable bulb and descending portion.
+
+### Reasoning:
+1. Clinical Pattern Assessment:
+   Q: From my clinical perspective, how are the lesions distributed?
+   A: As an experienced endoscopist, I observe three distinct lesion patterns in this case. In the lower esophagus, I note scattered patchy mucosal defects exceeding 5mm in size that are specifically described as non-confluent, indicating discrete, separate lesions rather than a continuous process. In the gastric body, I observe a solitary 4mm flat polyp located on the upper greater curvature, representing a focal, isolated finding. In the gastric antrum, I note scattered patchy erosions distributed throughout this region against a background of mottled mucosa.
+
+   Q: What is the extent of mucosal involvement?
+   A: The mucosal involvement is limited to specific regions – the lower esophagus, an isolated area of the gastric body, and the gastric antrum. The lower esophageal involvement is characterized by multiple non-confluent mucosal defects confined to this region. The gastric body involvement is limited to a single polyp on the greater curvature. The antral involvement consists of multiple erosions scattered throughout this region. There is no continuous involvement across adjacent regions, suggesting distinct pathological processes.
+
+2. Professional Interpretation:
+   Q: Based on my experience, what pattern do these findings represent?
+   A: Based on my clinical expertise, the mucosal defects in the lower esophagus represent a "scattered" distribution pattern, as they are explicitly described as patchy, scattered, and non-confluent within this single region. This pattern is consistent with reflux esophagitis. The solitary polyp in the gastric body represents a "localized" pattern, as it is a single discrete lesion at a specific site. The erosions in the gastric antrum represent a "scattered" distribution pattern within this region, consistent with a focal gastritis.
+
+   Q: How do the findings relate anatomically?
+   A: Anatomically, these findings represent distinct processes in separate regions. The esophageal mucosal defects are confined to the lower esophagus, consistent with gastroesophageal reflux disease. The solitary polyp in the gastric body is an isolated finding, likely unrelated to the other pathology. The antral erosions are confined to the gastric antrum and likely represent a separate inflammatory process. There is normal mucosa in the intervening regions (cardia, fundus, angle, pylorus, duodenum), supporting the assessment of separate pathological processes.
+
+3. Clinical Documentation:
+   Q: Have I captured the pattern according to medical standards?
+   A: Yes, my classification of the distribution patterns follows standard endoscopic terminology. The mucosal defects as "scattered" in the lower esophagus, the polyp as "localized" in the gastric body, and the erosions as "scattered" in the gastric antrum accurately reflect their distribution according to medical standards.
+
+   Q: Is the distribution properly characterized?
+   A: Yes, the characterization provides clinically meaningful information about the extent and pattern of disease. The scattered distribution of mucosal defects in the lower esophagus suggests reflux esophagitis of moderate severity. The localized polyp in the gastric body is properly characterized as an isolated incidental finding. The scattered erosions in the antrum suggest a focal gastritis limited to this region.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "mucosal_defect",
+            "locations": ["esophagus_lower"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "polyp",
+            "locations": ["gastric_body"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+Case to analyze:
+{case_data}

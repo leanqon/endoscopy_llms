@@ -1,0 +1,220 @@
+# prompts/templates/pattern_recognition/systematic_cot_2_shot.txt
+You are a medical data analyst. Let's analyze patterns systematically:
+
+1. Pattern Data Collection:
+   Q: What is the complete set of findings to analyze?
+   A: List all findings systematically
+   Q: Where is each finding located?
+   A: Map to anatomical locations
+   Q: What relationships exist between locations?
+   A: Document spatial connections
+
+2. Distribution Analysis:
+   Q: How are findings distributed across locations?
+   A: Analyze spatial patterns
+   Q: What type of distribution is present?
+   A: Evaluate using standard categories
+   Q: Are there multiple distribution patterns?
+   A: Document all patterns
+
+3. Pattern Verification:
+   Q: Is pattern classification complete?
+   A: Check all findings
+   Q: Does classification match standard definitions?
+   A: Verify against criteria
+   Q: Are all relationships documented?
+   A: Review connections
+
+Return valid JSON following format rules exactly.
+
+FORMAT RULES:
+1. At least one pattern must be documented
+2. Use only standardized lesion types for finding_type
+3. All locations must use standardized terms
+4. Distribution must be one of: continuous, scattered, localized, diffuse
+5. Multiple locations required for continuous/scattered/diffuse patterns
+6. Single location only for localized pattern
+
+REQUIRED OUTPUT FORMAT:
+{
+    "patterns": [
+        {
+            "finding_type": "string",  // Must use standardized lesion types
+            "locations": ["string"],   // Must use standardized anatomical terms
+            "distribution": "continuous/scattered/localized/diffuse"
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass, elevation
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection
+- clipping, hemostasis
+- submucosal_dissection
+
+# Systematic Analysis CoT for Pattern Recognition (5-shot)
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+
+### Reasoning:
+1. Pattern Data Collection:
+   Q: What is the complete set of findings to analyze?
+   A: A systematic review of the endoscopic report reveals two main abnormal findings:
+   - Scattered punctate and patchy erosions in the gastric antrum
+   - Multiple shallow ulcers in the duodenal descending portion (with yellow-black coating)
+   
+   Other areas (esophagus, cardia, fundus, angle, pylorus) show no significant lesions, though there is mottled mucosa in the body and antrum, and mucosal congestion in the duodenal bulb.
+
+   Q: Where is each finding located?
+   A: Looking at standardized anatomical locations:
+   - Erosions are located in the gastric_antrum
+   - Ulcers are located in the duodenal_descending
+   
+   Both of these are specific, discrete anatomical locations within the upper GI tract.
+
+   Q: What relationships exist between locations?
+   A: The gastric_antrum and duodenal_descending are not directly adjacent - they are separated by the gastric_pylorus and duodenal_bulb. There is no description of continuous involvement across these regions, suggesting separate processes rather than a continuous phenomenon.
+
+2. Distribution Analysis:
+   Q: How are findings distributed across locations?
+   A: Analyzing the spatial pattern:
+   - Within the gastric_antrum: The erosions are described as "scattered punctate and patchy," indicating multiple discrete lesions distributed throughout this anatomical region but confined to it.
+   - Within the duodenal_descending: The ulcers are described as "multiple," indicating several discrete lesions within this anatomical region.
+   
+   Neither finding extends beyond its respective anatomical region to adjacent areas.
+
+   Q: What type of distribution is present?
+   A: Based on the description:
+   - The erosions in the gastric_antrum fit the definition of a "scattered" distribution - multiple discrete lesions within a single anatomical location.
+   - The ulcers in the duodenal_descending also fit the definition of a "scattered" distribution - multiple discrete lesions within a single anatomical location.
+   
+   Neither pattern meets criteria for "continuous" (spanning adjacent locations), "diffuse" (widespread involvement across multiple locations), or "localized" (single lesion at a single location).
+
+   Q: Are there multiple distribution patterns?
+   A: Yes, there are two distinct patterns, each involving different lesion types and different anatomical locations:
+   1. Scattered erosions in the gastric_antrum
+   2. Scattered ulcers in the duodenal_descending
+
+3. Pattern Verification:
+   Q: Is pattern classification complete?
+   A: Yes, all abnormal findings have been systematically analyzed and classified. The erosions in the gastric_antrum and the ulcers in the duodenal_descending have both been classified as having a "scattered" distribution pattern.
+
+   Q: Does classification match standard definitions?
+   A: Yes, the classification is consistent with standard definitions:
+   - "Scattered" is defined as multiple discrete findings within a single anatomical location.
+   - This accurately describes both the erosions in the gastric_antrum and the ulcers in the duodenal_descending.
+
+   Q: Are all relationships documented?
+   A: Yes, the spatial relationships have been documented. The erosions and ulcers occur in separate, non-adjacent anatomical locations (gastric_antrum and duodenal_descending), with no described continuity between them.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "ulcer",
+            "locations": ["duodenal_descending"],
+            "distribution": "scattered"
+        }
+    ]
+}
+
+## Example 2:
+Gender: Male
+Age: 73
+Endoscopic Findings: Ileocecal valve: normal. Terminal ileum: normal. Ascending colon: 0.8cm sub-pedunculated polyp, EMR performed, defect clipped. Transverse colon: two 0.6-0.7cm sub-pedunculated polyps, EMR performed, defects clipped. Descending colon: 1.5×1.0cm irregular mass at 36cm, friable, thrombin spray applied. Sigmoid: multiple 0.3-0.5cm polyps removed by forceps. Rectum: normal with internal hemorrhoids.
+
+### Reasoning:
+1. Pattern Data Collection:
+   Q: What is the complete set of findings to analyze?
+   A: A systematic review of the endoscopic report reveals the following abnormal findings:
+   - One sub-pedunculated polyp (0.8cm) in the ascending colon
+   - Two sub-pedunculated polyps (0.6-0.7cm) in the transverse colon
+   - One irregular mass (1.5×1.0cm) in the descending colon
+   - Multiple polyps (0.3-0.5cm) in the sigmoid colon
+   
+   Other areas (terminal ileum, ileocecal valve, rectum) appear normal, though internal hemorrhoids are noted in the rectum.
+
+   Q: Where is each finding located?
+   A: Looking at standardized anatomical locations:
+   - Polyp is located in the ascending_colon
+   - Polyps are located in the transverse_colon
+   - Mass is located in the descending_colon
+   - Polyps are located in the sigmoid_colon
+   
+   These represent distinct segments of the large intestine.
+
+   Q: What relationships exist between locations?
+   A: The findings involve multiple segments of the colon, but not in a continuous fashion. The findings in the ascending_colon, transverse_colon, and sigmoid_colon are all similar (polyps), suggesting a common process affecting multiple non-adjacent segments. The descending_colon finding is distinct (a mass rather than polyps).
+
+2. Distribution Analysis:
+   Q: How are findings distributed across locations?
+   A: Analyzing the spatial pattern:
+   - For polyps: They are found in three non-adjacent segments of the colon (ascending, transverse, sigmoid), suggesting a scattered distribution throughout the colon rather than a continuous or localized process.
+   - For the mass: It is a solitary finding limited to the descending colon, suggesting a localized distribution.
+
+   Q: What type of distribution is present?
+   A: Based on the description:
+   - The polyps fit the definition of a "scattered" distribution - similar lesions appearing in multiple non-adjacent locations (ascending_colon, transverse_colon, sigmoid_colon).
+   - The mass fits the definition of a "localized" distribution - a single lesion limited to one location (descending_colon).
+
+   Q: Are there multiple distribution patterns?
+   A: Yes, there are two distinct patterns:
+   1. Scattered polyps across three non-adjacent colonic segments
+   2. Localized mass in the descending colon
+
+3. Pattern Verification:
+   Q: Is pattern classification complete?
+   A: Yes, all abnormal findings have been systematically analyzed and classified. The polyps have been classified as having a "scattered" distribution across multiple colonic segments, and the mass has been classified as having a "localized" distribution in the descending colon.
+
+   Q: Does classification match standard definitions?
+   A: Yes, the classification is consistent with standard definitions:
+   - "Scattered" is defined as multiple discrete findings across non-adjacent locations, which accurately describes the polyps in the ascending, transverse, and sigmoid colon.
+   - "Localized" is defined as a single lesion limited to one location, which accurately describes the mass in the descending colon.
+
+   Q: Are all relationships documented?
+   A: Yes, the spatial relationships have been documented. The polyps occur in multiple non-adjacent segments (ascending, transverse, sigmoid), while the mass is limited to the descending colon.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "polyp",
+            "locations": ["ascending_colon", "transverse_colon", "sigmoid_colon"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "mass",
+            "locations": ["descending_colon"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+Case to analyze:
+{case_data}

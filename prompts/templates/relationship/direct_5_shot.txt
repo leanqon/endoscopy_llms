@@ -1,0 +1,184 @@
+# prompts/templates/pattern_recognition/direct_5_shot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data annotator. Identify distribution patterns of findings across locations. Follow format rules exactly and use only standardized terms.
+
+Return valid JSON following format rules exactly.
+
+FORMAT RULES:
+1. At least one pattern must be documented
+2. Use only standardized lesion types for finding_type
+3. All locations must use standardized terms
+4. Distribution must be one of: continuous, scattered, localized, diffuse
+5. Multiple locations required for continuous/scattered/diffuse patterns
+6. Single location only for localized pattern
+
+REQUIRED OUTPUT FORMAT:
+{
+    "patterns": [
+        {
+            "finding_type": "string",  // Must use standardized lesion types
+            "locations": ["string"],   // Must use standardized anatomical terms
+            "distribution": "continuous/scattered/localized/diffuse"
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass, elevation
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection
+- clipping, hemostasis
+- submucosal_dissection
+
+Here is five examples of pattern recognition:
+
+Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+Endoscopic Diagnosis: Duodenal bulbitis, multiple descending duodenal ulcers, chronic non-atrophic gastritis with erosions.
+
+Output:
+{
+    "patterns": [
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "ulcer",
+            "locations": ["duodenal_descending"],
+            "distribution": "scattered"
+        }
+    ]
+}
+
+Example 2:
+Gender: Male
+Age: 73
+Endoscopic Findings: Ileocecal valve: normal. Terminal ileum: normal. Ascending colon: 0.8cm sub-pedunculated polyp, EMR performed, defect clipped. Transverse colon: two 0.6-0.7cm sub-pedunculated polyps, EMR performed, defects clipped. Descending colon: 1.5×1.0cm irregular mass at 36cm, friable, thrombin spray applied. Sigmoid: multiple 0.3-0.5cm polyps removed by forceps. Rectum: normal with internal hemorrhoids. Insertion time: 7min, withdrawal time: 15min. Boston Bowel Prep Score: 5.
+Endoscopic Diagnosis: Descending colon mass - nature undetermined, hemostasis performed; multiple colonic polyps (EMR and forceps removal), internal hemorrhoids, poor bowel prep, recommend early repeat examination.
+
+Output:
+{
+    "patterns": [
+        {
+            "finding_type": "polyp",
+            "locations": ["ascending_colon", "transverse_colon", "sigmoid_colon"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "mass",
+            "locations": ["descending_colon"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+Example 3:
+Gender: Male
+Age: 34
+Endoscopic Findings: Esophagus: two varices beyond 30cm with red signs, sclerotherapy performed (6ml polidocanol). Stomach: mosaic pattern, antral erosions, 0.3cm ulcer. Duodenum: 0.5cm hyperplastic polyp in descending part.
+Endoscopic Diagnosis: Esophageal varices - sclerotherapy performed, portal hypertensive gastropathy, gastric ulcer, duodenal polyp.
+
+Output:
+{
+    "patterns": [
+        {
+            "finding_type": "mass",
+            "locations": ["esophagus_middle"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "ulcer",
+            "locations": ["gastric_antrum"],
+            "distribution": "localized"
+        },
+        {
+            "finding_type": "polyp",
+            "locations": ["duodenal_descending"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+Example 4:
+Gender: Female
+Age: 63
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Seven flat polyps seen, size ranging from 0.2cm-0.6cm, larger ones removed by snare electrocautery, smaller ones partially removed by biopsy forceps and electrocautery ablation. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly red, one shallow ulcer approximately 0.2cm, surface covered with thin white coating, surrounding mucosa congested and edematous, scattered punctate and patchy erosions also seen. Pylorus: Round, opens and closes well. Duodenum: No abnormalities in bulb and descending portion.
+Endoscopic Diagnosis: Gastric ulcer (A2), multiple gastric body polyps (electrocautery + electrocautery ablation + polypectomy), chronic non-atrophic gastritis with erosions.
+
+Output:
+{
+    "patterns": [
+        {
+            "finding_type": "polyp",
+            "locations": ["gastric_body"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "ulcer",
+            "locations": ["gastric_antrum"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+Example 5:
+Gender: Female
+Age: 48
+Endoscopic Findings: Esophagus: Scattered patchy mucosal defects >5mm in lower portion, non-confluent. Cardia: Clear Z-line, normal position with smooth mucosa. Gastric fundus: Smooth mucosa with clear minimal mucus. Gastric body: 4mm flat polyp on upper greater curvature, smooth surface, removed by biopsy forceps. Gastric angle: Normal morphology with smooth mucosa and preserved curvature. Gastric antrum: Red and white mottled mucosa, predominantly red, with scattered patchy erosions. Pylorus: Round with good function. Duodenum: Unremarkable bulb and descending portion.
+Endoscopic Diagnosis: Grade B reflux esophagitis, gastric body polyp (polypectomy performed), chronic non-atrophic gastritis with erosions.
+
+Output:
+{
+    "patterns": [
+        {
+            "finding_type": "mucosal_defect",
+            "locations": ["esophagus_lower"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "polyp",
+            "locations": ["gastric_body"],
+            "distribution": "localized"
+        }
+    ]
+}
+
+Case to analyze:
+{case_data}

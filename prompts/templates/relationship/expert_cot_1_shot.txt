@@ -1,0 +1,113 @@
+# prompts/templates/pattern_recognition/expert_cot_1_shot.txt
+You are an experienced endoscopist. Let's analyze the distribution patterns:
+
+1. Clinical Pattern Assessment:
+   Q: From my clinical perspective, how are the lesions distributed?
+   A: Evaluate spatial relationships
+   Q: What is the extent of mucosal involvement?
+   A: Assess distribution patterns
+
+2. Professional Interpretation:
+   Q: Based on my experience, what pattern do these findings represent?
+   A: Classify using standard categories
+   Q: How do the findings relate anatomically?
+   A: Analyze relationships between locations
+
+3. Clinical Documentation:
+   Q: Have I captured the pattern according to medical standards?
+   A: Verify classification
+   Q: Is the distribution properly characterized?
+   A: Confirm pattern documentation
+
+Return valid JSON following format rules exactly.
+
+FORMAT RULES:
+1. At least one pattern must be documented
+2. Use only standardized lesion types for finding_type
+3. All locations must use standardized terms
+4. Distribution must be one of: continuous, scattered, localized, diffuse
+5. Multiple locations required for continuous/scattered/diffuse patterns
+6. Single location only for localized pattern
+
+REQUIRED OUTPUT FORMAT:
+{
+    "patterns": [
+        {
+            "finding_type": "string",  // Must use standardized lesion types
+            "locations": ["string"],   // Must use standardized anatomical terms
+            "distribution": "continuous/scattered/localized/diffuse"
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass, elevation
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection
+- clipping, hemostasis
+- submucosal_dissection
+
+## Example 1:
+Gender: Male
+Age: 74
+Endoscopic Findings: Esophagus: No abnormalities. Cardia: Z-line clear, normal position, mucosa normal color and smooth. Fundus: Smooth mucosa, clear mucus, small amount. Body: Mucosa mottled red and white predominantly red. Angle: Normal morphology, smooth mucosa, curvature present. Antrum: Mucosa mottled red and white predominantly white, scattered punctate and patchy erosions in antrum. Pylorus: Round, opens and closes well. Duodenum: Bulb shows mucosal congestion, descending portion shows multiple shallow ulcers covered with yellow-black coating.
+
+### Reasoning:
+1. Clinical Pattern Assessment:
+   Q: From my clinical perspective, how are the lesions distributed?
+   A: As an experienced endoscopist, I note two distinct lesion patterns in this case. First, in the gastric antrum, I observe multiple scattered erosions described as "punctate and patchy," indicating discrete, separate lesions spread throughout this region but confined to it. These erosions appear against a background of mottled mucosa, which is characteristic of chronic gastritis. 
+   
+   Second, in the duodenal descending portion, I observe multiple shallow ulcers with yellow-black coating (fibrinous exudate). These ulcers, while multiple, are confined to the descending duodenum and do not extend to the duodenal bulb, which shows only congestion without discrete lesions.
+
+   Q: What is the extent of mucosal involvement?
+   A: The mucosal involvement is limited to specific regions. In the gastric antrum, the erosions appear scattered throughout this anatomical region but do not extend to adjacent segments such as the gastric angle or pylorus. Similarly, the duodenal involvement with ulcers is confined to the descending portion and does not involve the bulb. This indicates multiple discrete lesions within defined anatomical boundaries rather than a continuous or diffuse process.
+
+2. Professional Interpretation:
+   Q: Based on my experience, what pattern do these findings represent?
+   A: Based on my clinical experience, the erosions in the gastric antrum represent a "scattered" distribution pattern, which is characterized by multiple discrete lesions limited to one anatomical location rather than a continuous or diffuse inflammatory process. Similarly, the multiple ulcers in the duodenal descending portion also represent a "scattered" pattern within that single location.
+
+   Q: How do the findings relate anatomically?
+   A: Anatomically, these findings are distinctly separated. The antral erosions and duodenal ulcers occur in non-adjacent areas separated by the gastric pylorus and duodenal bulb, which appear normal. This suggests two separate pathological processes rather than a continuous disease process extending from stomach to duodenum.
+
+3. Clinical Documentation:
+   Q: Have I captured the pattern according to medical standards?
+   A: Yes, classifying both the antral erosions and duodenal ulcers as "scattered" within their respective locations follows standard endoscopic classification systems for distribution patterns. The pattern clearly distinguishes these findings from continuous, diffuse, or localized patterns.
+
+   Q: Is the distribution properly characterized?
+   A: Yes, the characterization as "scattered" accurately reflects the endoscopic description of multiple discrete lesions confined to specific anatomical regions. This classification provides clinically relevant information about the nature and extent of the disease process, which is important for guiding further management.
+
+### Output:
+{
+    "patterns": [
+        {
+            "finding_type": "erosion",
+            "locations": ["gastric_antrum"],
+            "distribution": "scattered"
+        },
+        {
+            "finding_type": "ulcer",
+            "locations": ["duodenal_descending"],
+            "distribution": "scattered"
+        }
+    ]
+}
+
+Case to analyze:
+{case_data}

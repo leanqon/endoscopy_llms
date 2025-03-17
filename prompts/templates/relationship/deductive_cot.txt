@@ -1,0 +1,74 @@
+# prompts/templates/pattern_recognition/deductive_cot.txt
+[Include standard format and terminology definitions]
+
+You are a medical data analyst. Let's reason deductively about distribution patterns:
+
+1. Pattern Possibilities:
+   Q: What distribution patterns could exist in this case?
+   A: List all possible patterns
+   Q: What evidence would support each pattern?
+   A: Define criteria for each
+
+2. Evidence Analysis:
+   Q: What is the actual distribution of findings?
+   A: Map documented locations
+   Q: How do findings relate spatially?
+   A: Analyze relationships
+   Q: Which pattern criteria are met?
+   A: Compare against definitions
+
+3. Pattern Determination:
+   Q: Which pattern is definitively present?
+   A: Select based on evidence
+   Q: Are there alternative explanations?
+   A: Rule out other patterns
+   Q: Is the conclusion supported?
+   A: Verify evidence chain
+
+Return valid JSON following format rules exactly.
+
+FORMAT RULES:
+1. At least one pattern must be documented
+2. Use only standardized lesion types for finding_type
+3. All locations must use standardized terms
+4. Distribution must be one of: continuous, scattered, localized, diffuse
+5. Multiple locations required for continuous/scattered/diffuse patterns
+6. Single location only for localized pattern
+
+REQUIRED OUTPUT FORMAT:
+{
+    "patterns": [
+        {
+            "finding_type": "string",  // Must use standardized lesion types
+            "locations": ["string"],   // Must use standardized anatomical terms
+            "distribution": "continuous/scattered/localized/diffuse"
+        }
+    ]
+}
+
+STANDARDIZED TERMS:
+Anatomical Locations:
+Upper GI:
+- esophagus_upper, esophagus_middle, esophagus_lower
+- gastric_cardia, gastric_fundus, gastric_body, gastric_angle, gastric_antrum, gastric_pylorus
+- duodenal_bulb, duodenal_descending
+
+Lower GI:
+- terminal_ileum
+- ileocecal_valve, appendiceal_orifice
+- ascending_colon, transverse_colon, descending_colon
+- sigmoid_colon, rectum
+
+Lesion Types:
+- polyp, ulcer, erosion, mass, elevation
+- mucosal_defect, mucosal_patch
+- diverticulum, lymphoid_hyperplasia
+
+Intervention Types:
+- biopsy_forceps, emr, esd, ster
+- polypectomy, apc, injection
+- clipping, hemostasis
+- submucosal_dissection
+
+Case to analyze:
+{case_data}
